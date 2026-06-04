@@ -172,7 +172,7 @@ h1 {
 }
 .user-bar .btn-logout:active { background: #fee; }
 
-/* ====== 表单样式 ====== */
+/* ====== 表单 ====== */
 .form-card {
   background: #fff;
   border-radius: 16px;
@@ -241,59 +241,27 @@ h1 {
 }
 .btn-cost-toggle:hover { border-color: #e63946; color: #e63946; background: #fff5f5; }
 .btn-cost-toggle.open { border-color: #e63946; background: #fff5f5; color: #e63946; }
-
-/* 成本面板 */
-.cost-panel {
-  display: none;
-  margin-top: 0;
-  border-top: none;
-  padding-top: 0;
-}
-.cost-panel.open {
-  display: block;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
-}
-.cost-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 0 2px;
-}
+.cost-panel { display: none; margin-top: 0; border-top: none; padding-top: 0; }
+.cost-panel.open { display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+.cost-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 2px; }
 .cost-header .cost-total-label { font-size: 14px; color: #333; font-weight: 500; }
 .cost-header .cost-total-amount { font-size: 18px; font-weight: 700; color: #e63946; }
 .cost-btn-clear { background: none; border: none; font-size: 12px; color: #bbb; cursor: pointer; padding: 2px 6px; }
 .cost-btn-clear:active { color: #e63946; }
 .cost-list { display: flex; flex-direction: column; gap: 6px; }
-.cost-item {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.cost-item input {
-  padding: 8px 10px;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
-  background: #fafafa;
-  font-family: inherit;
-}
+.cost-item { display: flex; gap: 8px; align-items: center; }
+.cost-item input { padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: #fafafa; font-family: inherit; }
 .cost-item input:focus { outline: none; border-color: #e63946; background: #fff; }
 .cost-item .cost-input-desc { flex: 3; width: 0; min-width: 0; }
 .cost-item .cost-input-amount { flex: 1.2; width: 0; min-width: 0; }
 .cost-item .cost-btn-del { background: none; border: none; font-size: 16px; color: #ccc; cursor: pointer; padding: 0 2px; flex-shrink: 0; }
 .cost-item .cost-btn-del:active { color: #e63946; }
-.cost-add-row {
-  margin-top: 6px; padding: 8px; background: none; border: 1px dashed #ddd; border-radius: 8px;
-  font-size: 13px; color: #999; cursor: pointer; width: 100%;
-}
+.cost-add-row { margin-top: 6px; padding: 8px; background: none; border: 1px dashed #ddd; border-radius: 8px; font-size: 13px; color: #999; cursor: pointer; width: 100%; }
 .cost-add-row:active { background: #fafafa; }
 .cost-list.collapsed .cost-item:nth-child(n+3) { display: none; }
 .cost-toggle-btn { display: block; width: 100%; text-align: center; padding: 6px; font-size: 13px; color: #999; background: none; border: none; cursor: pointer; margin-top: 2px; }
 
-/* 统计栏 */
+/* ====== 统计 ====== */
 .stats-bar {
   display: flex;
   justify-content: space-around;
@@ -307,7 +275,7 @@ h1 {
 .stat-label { font-size: 12px; opacity: 0.7; }
 .stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
 
-/* 列表 */
+/* ====== 列表 ====== */
 .list-header {
   display: flex;
   justify-content: space-between;
@@ -324,32 +292,19 @@ h1 {
   display: flex; align-items: center; justify-content: space-between;
 }
 .record-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.record-order {
-  font-size: 12px; color: #4361ee; font-weight: 600; background: #eef1ff;
-  display: inline-block; padding: 1px 8px; border-radius: 10px; width: fit-content;
-}
+.record-order { font-size: 12px; color: #4361ee; font-weight: 600; background: #eef1ff; display: inline-block; padding: 1px 8px; border-radius: 10px; width: fit-content; }
 .record-date { font-size: 13px; color: #666; margin-top: 2px; }
 .record-note { font-size: 13px; color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
-.record-price {
-  font-size: 18px; font-weight: 700; color: #2d6a4f;
-  display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: 10px;
-}
+.record-price { font-size: 18px; font-weight: 700; color: #2d6a4f; display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: 10px; }
 .btn-del { background: none; border: none; font-size: 18px; color: #ccc; cursor: pointer; padding: 0 4px; }
 .btn-del:active { color: #e63946; }
 .empty-state { text-align: center; color: #aaa; padding: 40px 0; font-size: 15px; }
 
-/* 同步提示 */
-.sync-bar {
-  text-align: center;
-  font-size: 12px;
-  color: #bbb;
-  padding: 4px 0 0;
-  margin: 0 16px;
-}
+/* ====== 同步 / 安装 ====== */
+.sync-bar { text-align: center; font-size: 12px; color: #bbb; padding: 4px 0 0; margin: 0 16px; }
 .sync-bar.syncing { color: #4361ee; }
 .sync-bar.error { color: #e63946; }
 
-/* 安装提示 */
 .install-bar {
   display: none;
   justify-content: space-between;
@@ -371,6 +326,7 @@ h1 {
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
 }
 .install-bar .install-btn:active { opacity: 0.8; }
 .install-bar .install-close {
@@ -379,10 +335,12 @@ h1 {
   color: #999;
   font-size: 16px;
   cursor: pointer;
-  margin-left: 6px;
+  margin-left: 4px;
+  flex-shrink: 0;
 }
+.install-bar .install-text { flex: 1; }
 
-/* 底部工具栏 */
+/* ====== 底部工具栏 ====== */
 .toolbar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -408,7 +366,6 @@ h1 {
 }
 .toolbar button:active { background: #f5f5f5; }
 .toolbar button.export-btn { color: #4361ee; border-color: #4361ee; }
-.toolbar button.import-btn { color: #2d6a4f; border-color: #2d6a4f; }
 </style>
 </head>
 <body>
@@ -426,7 +383,6 @@ h1 {
         <button class="auth-tab" data-tab="register">注册</button>
       </div>
 
-      <!-- 登录表单 -->
       <form class="auth-form active" id="loginForm">
         <div class="auth-error" id="loginError"></div>
         <input type="email" id="loginEmail" placeholder="邮箱" required autocomplete="email">
@@ -435,7 +391,6 @@ h1 {
         <div class="auth-loading" id="loginLoading" style="display:none;">登录中...</div>
       </form>
 
-      <!-- 注册表单 -->
       <form class="auth-form" id="registerForm">
         <div class="auth-error" id="registerError"></div>
         <div class="auth-success" id="registerSuccess">✅ 注册成功！正在登录...</div>
@@ -451,7 +406,6 @@ h1 {
 <!-- ====== 记账 App ====== -->
 <div id="appPage" class="page">
 
-  <!-- 用户栏 -->
   <div class="user-bar">
     <span class="user-email" id="userEmail"></span>
     <button class="btn-logout" id="logoutBtn">退出</button>
@@ -493,7 +447,7 @@ h1 {
 
   <!-- 安装提示 -->
   <div class="install-bar" id="installBar">
-    <span id="installText">📲 添加到主屏幕，像 App 一样用</span>
+    <span class="install-text">📲 添加到主屏幕，像 App 一样用</span>
     <span>
       <button class="install-btn" id="installBtn">安装</button>
       <button class="install-close" id="installClose">✕</button>
@@ -532,7 +486,6 @@ h1 {
 </div>
 
 <script type="module">
-// ====== Supabase 初始化 ======
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4';
 
 const SUPABASE_URL = 'https://ekqbzemiumadjknhqhfm.supabase.co';
@@ -540,17 +493,14 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ====== DOM 引用 ======
 const authPage = document.getElementById('authPage');
 const appPage = document.getElementById('appPage');
 const toolbar = document.getElementById('toolbar');
 const userEmail = document.getElementById('userEmail');
 const syncBar = document.getElementById('syncBar');
 
-// ====== 用户状态 ======
 let currentUser = null;
 
-// ====== 页面切换 ======
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   page.classList.add('active');
@@ -558,7 +508,6 @@ function showPage(page) {
 }
 
 // ====== 认证 UI ======
-// Tab 切换
 document.querySelectorAll('.auth-tab').forEach(tab => {
   tab.addEventListener('click', function() {
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -581,7 +530,6 @@ function showError(formId, msg) {
   el.classList.add('show');
 }
 
-// 登录
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   setLoading('login', true);
@@ -594,15 +542,10 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   setLoading('login', false);
 
   if (error) {
-    if (error.message.includes('Invalid login credentials')) {
-      showError('login', '邮箱或密码错误');
-    } else {
-      showError('login', error.message);
-    }
+    showError('login', error.message.includes('Invalid login credentials') ? '邮箱或密码错误' : error.message);
   }
 });
 
-// 注册
 document.getElementById('registerForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   setLoading('register', true);
@@ -629,12 +572,11 @@ document.getElementById('registerForm').addEventListener('submit', async functio
   }
 });
 
-// 退出
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   await supabase.auth.signOut();
 });
 
-// ====== 认证状态监听 ======
+// ====== 认证状态 ======
 supabase.auth.onAuthStateChange((event, session) => {
   if (session) {
     currentUser = session.user;
@@ -644,7 +586,6 @@ supabase.auth.onAuthStateChange((event, session) => {
   } else {
     currentUser = null;
     showPage(authPage);
-    // 重置表单
     document.getElementById('loginBtn').textContent = '登录';
     document.getElementById('registerBtn').textContent = '注册';
     document.querySelectorAll('.auth-loading').forEach(l => l.style.display = 'none');
@@ -659,23 +600,54 @@ supabase.auth.onAuthStateChange((event, session) => {
   }
 });
 
-// ====== 同步状态 ======
-function setSyncing(show) {
-  if (show) {
-    syncBar.textContent = '⏳ 同步中...';
-    syncBar.className = 'sync-bar syncing';
-  } else {
-    syncBar.textContent = '☁️ 数据已同步到云端';
-    syncBar.className = 'sync-bar';
-  }
+// ====== 安装到桌面 ======
+let deferredPrompt = null;
+const installBar = document.getElementById('installBar');
+const installBtn = document.getElementById('installBtn');
+const installClose = document.getElementById('installClose');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+const isInstalled = window.matchMedia('(display-mode: standalone)').matches
+  || window.matchMedia('(display-mode: fullscreen)').matches
+  || navigator.standalone === true;
+
+if (!isInstalled) {
+  // 显示安装提示条
+  installBar.classList.add('show');
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        installBar.classList.remove('show');
+      }
+      deferredPrompt = null;
+    } else {
+      alert('请点 Chrome 右上角三个点 ☰\n→ 添加到主屏幕\n→ 添加');
+    }
+  });
+
+  installClose.addEventListener('click', () => {
+    installBar.classList.remove('show');
+  });
 }
 
+// ====== 同步状态 ======
+function setSyncing(show) {
+  syncBar.textContent = show ? '⏳ 同步中...' : '☁️ 数据已同步到云端';
+  syncBar.className = show ? 'sync-bar syncing' : 'sync-bar';
+}
 function setSyncError(msg) {
   syncBar.textContent = '⚠️ ' + msg;
   syncBar.className = 'sync-bar error';
 }
 
-// ====== 数据加载 ======
+// ====== 数据 ======
 let records = [];
 let costs = [];
 let costExpanded = false;
@@ -705,7 +677,6 @@ function renderRecords() {
   const listEl = document.getElementById('recordList');
   const totalCountEl = document.getElementById('totalCount');
   const grandTotalEl = document.getElementById('grandTotal');
-
   let grandTotal = 0;
 
   if (records.length === 0) {
@@ -715,19 +686,7 @@ function renderRecords() {
       const price = parseFloat(r.price) || 0;
       grandTotal += price;
       const noteHtml = r.note ? `<div class="record-note">📌 ${r.note}</div>` : '';
-      return `
-        <div class="record-item">
-          <div class="record-info">
-            <div class="record-order">第 ${i + 1} 单</div>
-            <div class="record-date">📅 ${r.date}</div>
-            ${noteHtml}
-          </div>
-          <div class="record-price">
-            ${price.toFixed(2)} 元
-            <button class="btn-del" data-id="${r.id}">✕</button>
-          </div>
-        </div>
-      `;
+      return `<div class="record-item"><div class="record-info"><div class="record-order">第 ${i+1} 单</div><div class="record-date">📅 ${r.date}</div>${noteHtml}</div><div class="record-price">${price.toFixed(2)} 元<button class="btn-del" data-id="${r.id}">✕</button></div></div>`;
     }).join('');
   }
 
@@ -737,7 +696,7 @@ function renderRecords() {
   listEl.querySelectorAll('.btn-del').forEach(btn => {
     btn.addEventListener('click', async function() {
       const id = this.dataset.id;
-      if (!confirm('确定删除这条记录？')) return;
+      if (!confirm('确定删除？')) return;
       await supabase.from('records').delete().eq('id', id);
       records = records.filter(r => r.id !== id);
       renderRecords();
@@ -748,46 +707,29 @@ function renderRecords() {
 function renderCosts() {
   const listEl = document.getElementById('costList');
   const totalEl = document.getElementById('costTotal');
-
   let total = 0;
   costs.forEach(c => { total += parseFloat(c.amount) || 0; });
   totalEl.textContent = total.toFixed(2);
 
-  if (costs.length === 0) {
-    listEl.innerHTML = '';
-    return;
-  }
+  if (costs.length === 0) { listEl.innerHTML = ''; return; }
 
   const showToggle = costs.length > 2;
-
   listEl.innerHTML = costs.map((c, i) => {
     const amt = parseFloat(c.amount) || 0;
-    return `
-      <div class="cost-item">
-        <input class="cost-input-desc" type="text" value="${escHtml(c.description)}" placeholder="成本项目" data-cid="${c.id}" data-field="desc">
-        <input class="cost-input-amount" type="number" value="${amt || ''}" placeholder="金额" min="0" step="0.01" data-cid="${c.id}" data-field="amount">
-        <button class="cost-btn-del" data-cid="${c.id}">✕</button>
-      </div>
-    `;
+    const desc = escHtml(c.description);
+    return `<div class="cost-item"><input class="cost-input-desc" type="text" value="${desc}" placeholder="成本项目" data-cid="${c.id}" data-field="desc"><input class="cost-input-amount" type="number" value="${amt||''}" placeholder="金额" min="0" step="0.01" data-cid="${c.id}" data-field="amount"><button class="cost-btn-del" data-cid="${c.id}">✕</button></div>`;
   }).join('');
 
   if (showToggle) {
     listEl.classList.add('collapsed');
     if (costExpanded) listEl.classList.remove('collapsed');
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'cost-toggle-btn';
-    toggleBtn.textContent = costExpanded ? '▲ 收起' : `▼ 展开全部（共 ${costs.length} 项）`;
-    toggleBtn.addEventListener('click', function() {
-      costExpanded = !costExpanded;
-      renderCosts();
-    });
-    listEl.appendChild(toggleBtn);
-  } else {
-    listEl.classList.remove('collapsed');
-    costExpanded = false;
-  }
+    const tb = document.createElement('button');
+    tb.className = 'cost-toggle-btn';
+    tb.textContent = costExpanded ? '▲ 收起' : `▼ 展开全部（共 ${costs.length} 项）`;
+    tb.onclick = () => { costExpanded = !costExpanded; renderCosts(); };
+    listEl.appendChild(tb);
+  } else { listEl.classList.remove('collapsed'); costExpanded = false; }
 
-  // 输入监听（防抖同步到云端）
   let timers = {};
   listEl.querySelectorAll('.cost-input-desc, .cost-input-amount').forEach(inp => {
     inp.addEventListener('input', function() {
@@ -795,17 +737,10 @@ function renderCosts() {
       const field = this.dataset.field;
       const cost = costs.find(c => c.id === cid);
       if (!cost) return;
-      if (field === 'amount') {
-        cost.amount = parseFloat(this.value) || 0;
-      } else {
-        cost.description = this.value;
-      }
-      // 更新总额
-      let t = 0;
-      costs.forEach(c => { t += parseFloat(c.amount) || 0; });
+      if (field === 'amount') cost.amount = parseFloat(this.value) || 0;
+      else cost.description = this.value;
+      let t = 0; costs.forEach(c => { t += parseFloat(c.amount) || 0; });
       document.getElementById('costTotal').textContent = t.toFixed(2);
-
-      // 防抖同步
       clearTimeout(timers[cid]);
       timers[cid] = setTimeout(async () => {
         await supabase.from('costs').update({ [field]: cost[field] }).eq('id', cid);
@@ -813,7 +748,6 @@ function renderCosts() {
     });
   });
 
-  // 删除
   listEl.querySelectorAll('.cost-btn-del').forEach(btn => {
     btn.addEventListener('click', async function() {
       const cid = this.dataset.cid;
@@ -826,31 +760,20 @@ function renderCosts() {
 
 function escHtml(s) {
   const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+  d.textContent = s; return d.innerHTML;
 }
 
-// ====== 新增记账 ======
+// ====== 新增 ======
 document.getElementById('btnAdd').addEventListener('click', async function() {
   const date = document.getElementById('inputDate').value;
   const price = document.getElementById('inputPrice').value;
   const note = document.getElementById('inputNote').value.trim();
-
   if (!date) { alert('请选择日期'); return; }
   if (!price || parseFloat(price) <= 0) { alert('请输入有效的价钱'); return; }
-
-  const { data, error } = await supabase.from('records').insert({
-    user_id: currentUser.id,
-    date,
-    price: parseFloat(price),
-    note
-  }).select();
-
+  const { data, error } = await supabase.from('records').insert({ user_id: currentUser.id, date, price: parseFloat(price), note }).select();
   if (error) { setSyncError(error.message); return; }
-
   records.push(data[0]);
   renderRecords();
-
   document.getElementById('inputPrice').value = '';
   document.getElementById('inputNote').value = '';
   document.getElementById('inputPrice').focus();
@@ -864,143 +787,62 @@ document.getElementById('btnCostToggle').addEventListener('click', function() {
 });
 
 document.getElementById('costAddBtn').addEventListener('click', async function() {
-  const { data, error } = await supabase.from('costs').insert({
-    user_id: currentUser.id,
-    description: '',
-    amount: 0
-  }).select();
-
+  const { data, error } = await supabase.from('costs').insert({ user_id: currentUser.id, description: '', amount: 0 }).select();
   if (error) { setSyncError(error.message); return; }
-
   costs.push(data[0]);
   renderCosts();
   const items = document.querySelectorAll('.cost-item');
-  if (items.length > 0) {
-    items[items.length - 1].querySelector('.cost-input-desc').focus();
-  }
+  if (items.length > 0) items[items.length-1].querySelector('.cost-input-desc').focus();
 });
 
 document.getElementById('costClearBtn').addEventListener('click', async function() {
   if (!confirm('确定清空所有成本项？')) return;
-  for (const c of costs) {
-    await supabase.from('costs').delete().eq('id', c.id);
-  }
-  costs = [];
-  renderCosts();
+  for (const c of costs) await supabase.from('costs').delete().eq('id', c.id);
+  costs = []; renderCosts();
 });
 
 // ====== 清空 / 导出 ======
 document.getElementById('btnClearAll').addEventListener('click', async function() {
-  if (!confirm('确定要清空全部记录吗？此操作不可撤销。')) return;
-  for (const r of records) {
-    await supabase.from('records').delete().eq('id', r.id);
-  }
-  records = [];
-  renderRecords();
+  if (!confirm('确定清空全部记录？')) return;
+  for (const r of records) await supabase.from('records').delete().eq('id', r.id);
+  records = []; renderRecords();
 });
 
 document.getElementById('btnExportCSV').addEventListener('click', function() {
-  if (records.length === 0) { alert('没有记录可导出'); return; }
+  if (!records.length) { alert('没有记录'); return; }
   let csv = '\uFEFF第几单,日期,价钱,备注\n';
-  let grandTotal = 0;
-  records.forEach((r, i) => {
-    grandTotal += parseFloat(r.price) || 0;
-    csv += `${i+1},${r.date},${parseFloat(r.price).toFixed(2)},${r.note||''}\n`;
-  });
-  csv += `合计,,${grandTotal.toFixed(2)},\n`;
+  let t = 0;
+  records.forEach((r,i) => { t += parseFloat(r.price)||0; csv += `${i+1},${r.date},${parseFloat(r.price).toFixed(2)},${r.note||''}\n`; });
+  csv += `合计,,${t.toFixed(2)},\n`;
   downloadFile(csv, `拍照记账_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8');
 });
 
 document.getElementById('btnExportTXT').addEventListener('click', function() {
-  if (records.length === 0) { alert('没有记录可导出'); return; }
+  if (!records.length) { alert('没有记录'); return; }
   let txt = '=== 拍照记账 ===\n\n';
-  let grandTotal = 0;
-  records.forEach((r, i) => {
-    const price = parseFloat(r.price) || 0;
-    grandTotal += price;
-    txt += `第${i+1}单  [${r.date}]  ${price.toFixed(2)}元${r.note ? '  📌 ' + r.note : ''}\n`;
-  });
-  if (costs.length > 0) {
-    txt += '\n--- 成本明细 ---\n';
-    let costTotal = 0;
-    costs.forEach(c => { costTotal += parseFloat(c.amount) || 0; txt += `  ${c.description||'(未命名)'}：${(parseFloat(c.amount)||0).toFixed(2)}元\n`; });
-    txt += `  成本合计：${costTotal.toFixed(2)}元\n`;
+  let t = 0;
+  records.forEach((r,i) => { t += parseFloat(r.price)||0; txt += `第${i+1}单 [${r.date}] ${(parseFloat(r.price)||0).toFixed(2)}元${r.note?' 📌 '+r.note:''}\n`; });
+  if (costs.length) {
+    txt += '\n--- 成本 ---\n'; let ct = 0;
+    costs.forEach(c => { ct += parseFloat(c.amount)||0; txt += `  ${c.description||'(未命名)'}：${(parseFloat(c.amount)||0).toFixed(2)}元\n`; });
+    txt += `  合计：${ct.toFixed(2)}元\n`;
   }
-  txt += `\n━━━━━━━━━━━━━━━━━━\n`;
-  txt += `总单数：${records.length}\n`;
-  txt += `总收入：${grandTotal.toFixed(2)} 元\n`;
-  txt += `导出时间：${new Date().toLocaleString('zh-CN')}\n`;
+  txt += `\n总单数：${records.length}\n总收入：${t.toFixed(2)} 元\n导出：${new Date().toLocaleString('zh-CN')}\n`;
   downloadFile(txt, `拍照记账_${new Date().toISOString().slice(0,10)}.txt`, 'text/plain;charset=utf-8');
 });
 
-function downloadFile(content, filename, mimeType) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+function downloadFile(c, f, m) {
+  const b = new Blob([c], { type: m });
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a'); a.href = u; a.download = f;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(u);
 }
 
-// ====== 键盘快捷键 ======
-document.getElementById('inputPrice').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('btnAdd').click();
-});
-document.getElementById('inputNote').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('btnAdd').click();
-});
-
-// ====== PWA 安装 ======
-let deferredPrompt = null;
-const installBar = document.getElementById('installBar');
-const installBtn = document.getElementById('installBtn');
-const installClose = document.getElementById('installClose');
-const installText = document.getElementById('installText');
-
-// 检测是否已安装（通过 display-mode）
-const isInstalled = window.matchMedia('(display-mode: standalone)').matches
-  || window.matchMedia('(display-mode: fullscreen)').matches
-  || navigator.standalone === true;
-
-if (!isInstalled) {
-  // iOS Safari 总是可以添加到主屏幕
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  if (isIOS) {
-    installBar.classList.add('show');
-    installBtn.textContent = '查看方法';
-    installBtn.addEventListener('click', () => {
-      alert('在 Safari 中：\n1. 点底部中间的 分享按钮 □↑\n2. 往下滑，点"添加到主屏幕"\n3. 点右上角"添加"');
-    });
-  }
-
-  // 安卓 Chrome：监听 beforeinstallprompt
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBar.classList.add('show');
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const result = await deferredPrompt.userChoice;
-        if (result.outcome === 'accepted') {
-          installBar.classList.remove('show');
-        }
-        deferredPrompt = null;
-      }
-    });
-  });
-
-  // 关闭按钮
-  installClose.addEventListener('click', () => {
-    installBar.classList.remove('show');
-  });
-}
-
-// 默认日期
+document.getElementById('inputPrice').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnAdd').click(); });
+document.getElementById('inputNote').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnAdd').click(); });
 document.getElementById('inputDate').value = new Date().toISOString().slice(0, 10);
 
-// 检查登录状态
 const { data: { session } } = await supabase.auth.getSession();
 if (session) {
   currentUser = session.user;
@@ -1009,6 +851,5 @@ if (session) {
   loadAllData();
 }
 </script>
-
 </body>
 </html>
