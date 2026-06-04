@@ -61,6 +61,8 @@ h1 span { font-size: 26px; }
   background: #fafafa;
   transition: border-color 0.2s;
   font-family: inherit;
+  width: 100%;
+  max-width: 100%;
 }
 .form-group input:focus, .form-group textarea:focus {
   outline: none;
@@ -108,6 +110,142 @@ h1 span { font-size: 26px; }
   cursor: pointer;
 }
 .btn-secondary:active { background: #e0e0e0; }
+.btn-cost-toggle {
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: 1.5px dashed #ccc;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+.btn-cost-toggle:hover { border-color: #e63946; color: #e63946; background: #fff5f5; }
+.btn-cost-toggle.open { border-color: #e63946; background: #fff5f5; color: #e63946; }
+
+/* 成本面板 */
+.cost-panel {
+  display: none;
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+.cost-panel.open {
+  display: block;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+.cost-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 0 2px;
+}
+.cost-header .cost-total-label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+.cost-header .cost-total-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e63946;
+}
+.cost-btn-clear {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #bbb;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+.cost-btn-clear:active { color: #e63946; }
+
+.cost-list { display: flex; flex-direction: column; gap: 6px; }
+.cost-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.cost-item .cost-input-desc {
+  flex: 3;
+  padding: 8px 10px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fafafa;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  width: 0;
+  min-width: 0;
+}
+.cost-item .cost-input-desc:focus {
+  outline: none;
+  border-color: #e63946;
+  background: #fff;
+}
+.cost-item .cost-input-amount {
+  flex: 1.2;
+  padding: 8px 10px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fafafa;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  width: 0;
+  min-width: 0;
+}
+.cost-item .cost-input-amount:focus {
+  outline: none;
+  border-color: #e63946;
+  background: #fff;
+}
+.cost-item .cost-btn-del {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #ccc;
+  cursor: pointer;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+.cost-item .cost-btn-del:active { color: #e63946; }
+
+.cost-add-row {
+  margin-top: 6px;
+  padding: 8px;
+  background: none;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #999;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.15s;
+}
+.cost-add-row:active { background: #fafafa; color: #666; }
+
+/* 成本折叠 */
+.cost-list.collapsed .cost-item:nth-child(n+3) { display: none; }
+.cost-toggle-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 6px;
+  font-size: 13px;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.cost-toggle-btn:active { color: #666; }
 
 /* 统计栏 */
 .stats-bar {
@@ -346,6 +484,22 @@ h1 span { font-size: 26px; }
     </div>
   </div>
   <button class="btn-submit" id="btnAdd">➕ 记一单</button>
+
+  <!-- 成本按钮 -->
+  <button class="btn-cost-toggle" id="btnCostToggle">💰 成本</button>
+
+  <!-- 成本面板 -->
+  <div class="cost-panel" id="costPanel">
+    <div class="cost-header">
+      <span class="cost-total-label">总成本</span>
+      <span>
+        <button class="cost-btn-clear" id="costClearBtn">清空</button>
+        <span class="cost-total-amount" id="costTotal">0.00</span> 元
+      </span>
+    </div>
+    <div class="cost-list" id="costList"></div>
+    <button class="cost-add-row" id="costAddBtn">➕ 添加一项</button>
+  </div>
 </div>
 
 <!-- 导入面板 -->
@@ -419,6 +573,7 @@ h1 span { font-size: 26px; }
 <script>
 // ========== 数据层 ==========
 const STORAGE_KEY = 'photo_accounting_records2';
+const COST_KEY = 'photo_accounting_costs';
 
 function loadRecords() {
   try {
@@ -430,7 +585,17 @@ function saveRecords(records) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
-// ========== 渲染 ==========
+function loadCosts() {
+  try {
+    return JSON.parse(localStorage.getItem(COST_KEY)) || [];
+  } catch { return []; }
+}
+
+function saveCosts(costs) {
+  localStorage.setItem(COST_KEY, JSON.stringify(costs));
+}
+
+// ========== 渲染记账 ==========
 function render() {
   const records = loadRecords();
   const listEl = document.getElementById('recordList');
@@ -469,12 +634,95 @@ function render() {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
       const idx = parseInt(this.dataset.index);
-      deleteRecord(idx);
+      if (confirm('确定删除第 ' + (idx + 1) + ' 单？')) deleteRecord(idx);
     });
   });
 }
 
-// ========== 操作 ==========
+// ========== 渲染成本 ==========
+let costExpanded = false;
+
+function renderCosts() {
+  const costs = loadCosts();
+  const listEl = document.getElementById('costList');
+  const totalEl = document.getElementById('costTotal');
+
+  let total = 0;
+  costs.forEach(c => { total += parseFloat(c.amount) || 0; });
+  totalEl.textContent = total.toFixed(2);
+
+  if (costs.length === 0) {
+    listEl.innerHTML = '';
+    return;
+  }
+
+  const showToggle = costs.length > 2;
+
+  listEl.innerHTML = costs.map((c, i) => {
+    const amt = parseFloat(c.amount) || 0;
+    return `
+      <div class="cost-item">
+        <input class="cost-input-desc" type="text" value="${escHtml(c.desc)}" placeholder="成本项目" data-ci="${i}" data-field="desc">
+        <input class="cost-input-amount" type="number" value="${amt ? amt : ''}" placeholder="金额" min="0" step="0.01" data-ci="${i}" data-field="amount">
+        <button class="cost-btn-del" data-ci="${i}">✕</button>
+      </div>
+    `;
+  }).join('');
+
+  if (showToggle) {
+    listEl.classList.add('collapsed');
+    if (costExpanded) listEl.classList.remove('collapsed');
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'cost-toggle-btn';
+    toggleBtn.textContent = costExpanded ? '▲ 收起' : `▼ 展开全部（共 ${costs.length} 项）`;
+    toggleBtn.addEventListener('click', function() {
+      costExpanded = !costExpanded;
+      renderCosts();
+    });
+    listEl.appendChild(toggleBtn);
+  } else {
+    listEl.classList.remove('collapsed');
+    costExpanded = false;
+  }
+
+  // 成本项输入监听
+  listEl.querySelectorAll('.cost-input-desc, .cost-input-amount').forEach(inp => {
+    inp.addEventListener('input', function() {
+      const ci = parseInt(this.dataset.ci);
+      const field = this.dataset.field;
+      const costs = loadCosts();
+      if (field === 'amount') {
+        costs[ci].amount = parseFloat(this.value) || 0;
+      } else {
+        costs[ci].desc = this.value;
+      }
+      saveCosts(costs);
+      // 只更新总额，不重新渲染
+      let t = 0;
+      costs.forEach(c => { t += parseFloat(c.amount) || 0; });
+      document.getElementById('costTotal').textContent = t.toFixed(2);
+    });
+  });
+
+  // 成本项删除
+  listEl.querySelectorAll('.cost-btn-del').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const ci = parseInt(this.dataset.ci);
+      const costs = loadCosts();
+      costs.splice(ci, 1);
+      saveCosts(costs);
+      renderCosts();
+    });
+  });
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ========== 记账操作 ==========
 function addRecord(date, price, note) {
   const records = loadRecords();
   records.push({ date, price: parseFloat(price), note: note || '' });
@@ -519,17 +767,14 @@ function smartParse(text) {
 
     let date = '', price = 0, note = '';
 
-    // 格式1: "2024-01-01 5" 或 "2024-01-01 5 张三" (日期 + 价钱 + 可选备注)
     let m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
     if (m) { date = normalizeDate(m[1]); price = parseFloat(m[2]); note = m[3].trim(); }
     else {
-      // 格式2: "1/1 5" (简写日期)
       m = line.match(/^(\d{1,2})[-/](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
       if (m) {
         date = `${yearNow}-${pad(m[1])}-${pad(m[2])}`;
         price = parseFloat(m[3]); note = m[4].trim();
       } else {
-        // 格式3: CSV "2024-01-01,5" 或 "2024-01-01,5,张三"
         m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
         if (m) { date = normalizeDate(m[1]); price = parseFloat(m[2]); note = (m[3]||'').trim(); }
         else {
@@ -582,7 +827,7 @@ function showImportPreview(results) {
   }
 
   let grandTotal = 0;
-  body.innerHTML = results.map((r, i) => {
+  body.innerHTML = results.map(r => {
     grandTotal += r.price;
     const noteDisplay = r.note ? r.note : '—';
     return `<tr><td>${r.date}</td><td>${r.price.toFixed(2)}</td><td>${noteDisplay}</td></tr>`;
@@ -628,9 +873,22 @@ function exportTXT() {
     txt += `第${i+1}单  [${r.date}]  ${price.toFixed(2)}元${noteStr}\n`;
   });
 
+  // 导出成本
+  const costs = loadCosts();
+  if (costs.length > 0) {
+    txt += `\n--- 成本明细 ---\n`;
+    let costTotal = 0;
+    costs.forEach(c => {
+      const amt = parseFloat(c.amount) || 0;
+      costTotal += amt;
+      txt += `  ${c.desc || '(未命名)'}：${amt.toFixed(2)}元\n`;
+    });
+    txt += `  成本合计：${costTotal.toFixed(2)}元\n`;
+  }
+
   txt += `\n━━━━━━━━━━━━━━━━━━\n`;
   txt += `总单数：${records.length}\n`;
-  txt += `总金额：${grandTotal.toFixed(2)} 元\n`;
+  txt += `总收入：${grandTotal.toFixed(2)} 元\n`;
   txt += `导出时间：${new Date().toLocaleString('zh-CN')}\n`;
 
   downloadFile(txt, `拍照记账_${new Date().toISOString().slice(0,10)}.txt`, 'text/plain;charset=utf-8');
@@ -653,7 +911,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const today = new Date().toISOString().slice(0, 10);
   document.getElementById('inputDate').value = today;
 
-  // 回车快速提交
   document.getElementById('inputPrice').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') document.getElementById('btnAdd').click();
   });
@@ -676,12 +933,43 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('inputPrice').focus();
   });
 
-  // 清空
+  // 清空记账
   document.getElementById('btnClearAll').addEventListener('click', clearAll);
 
   // 导出
   document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
   document.getElementById('btnExportTXT').addEventListener('click', exportTXT);
+
+  // ====== 成本功能 ======
+
+  // 切换成本面板
+  const costToggle = document.getElementById('btnCostToggle');
+  const costPanel = document.getElementById('costPanel');
+  costToggle.addEventListener('click', function() {
+    const isOpen = costPanel.classList.toggle('open');
+    costToggle.classList.toggle('open', isOpen);
+    costToggle.textContent = isOpen ? '💰 收起成本' : '💰 成本';
+  });
+
+  // 添加成本项
+  document.getElementById('costAddBtn').addEventListener('click', function() {
+    const costs = loadCosts();
+    costs.push({ desc: '', amount: 0 });
+    saveCosts(costs);
+    renderCosts();
+    // 滚动到新添加的行
+    const items = document.querySelectorAll('.cost-item');
+    if (items.length > 0) {
+      items[items.length - 1].querySelector('.cost-input-desc').focus();
+    }
+  });
+
+  // 清空成本
+  document.getElementById('costClearBtn').addEventListener('click', function() {
+    if (!confirm('确定清空所有成本项？')) return;
+    saveCosts([]);
+    renderCosts();
+  });
 
   // ====== 导入功能 ======
 
@@ -754,6 +1042,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 渲染
   render();
+  renderCosts();
 });
 </script>
 
