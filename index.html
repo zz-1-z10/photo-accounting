@@ -370,12 +370,12 @@ function renderRecords() {
     return;
   }
 
-  // 按日期分组
+  // 按日期排序后再分组
+  const sortedRecords = [...records].sort((a, b) => dateSortKey(a.date) - dateSortKey(b.date));
   const groups = {};
-  records.forEach((r, i) => {
+  sortedRecords.forEach((r, i) => {
     const d = r.date || '未知日期';
     if (!groups[d]) groups[d] = [];
-    // 保存原始序号
     groups[d].push({ ...r, seq: i + 1 });
   });
 
@@ -524,9 +524,10 @@ document.getElementById('btnTextView').addEventListener('click', function() {
   records.forEach(r => { gt += parseFloat(r.price) || 0; });
   txt += `\n总单数：${records.length}\n总金额：${gt.toFixed(2)} 元\n\n`;
 
-  // 按日期分组
+  // 按日期排序后再分组
+  const sortedRecs = [...records].sort((a, b) => dateSortKey(a.date) - dateSortKey(b.date));
   const groups = {};
-  records.forEach((r, i) => {
+  sortedRecs.forEach((r, i) => {
     const d = r.date || '未知日期';
     if (!groups[d]) groups[d] = [];
     groups[d].push({ ...r, seq: i + 1 });
@@ -564,6 +565,7 @@ document.getElementById('btnImport').addEventListener('click', function() {
 
   const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   let imported = 0;
+  const newItems = [];
 
   lines.forEach(line => {
     if (/^(日期|date|单价|小计|合计|━━|===|#)/i.test(line)) return;
@@ -592,26 +594,25 @@ document.getElementById('btnImport').addEventListener('click', function() {
     }
 
     if (date && price > 0) {
-      // 检查是否已存在相同数据
-      const exists = records.some(r => r.date === date && Math.abs(parseFloat(r.price) - price) < 0.01 && r.note === note);
-      if (!exists) {
-        records.push({ date, price, note });
-        imported++;
-      }
+      newItems.push({ date, price, note });
+      imported++;
     }
   });
 
   if (imported === 0) {
-    alert('未能识别出有效数据，或数据已存在。\n\n格式示例：\n2026/03/17-第1单-金额：50.\n2026/03~05-第2单-金额：50.');
+    alert('未能识别出有效数据。\n\n格式示例：\n2026/03/17-第1单-金额：50.\n2026/03~05-第2单-金额：50.');
     return;
   }
+
+  // 合并到记录并排序
+  records.push(...newItems);
+  records.sort((a, b) => dateSortKey(a.date) - dateSortKey(b.date));
 
   // 批量存到云端
   (async () => {
     setSyncing(true);
     try {
-      // 只取最后 imported 条上传
-      const newItems = records.slice(-imported);
+      for (const item of newItems) {
       for (const item of newItems) {
         await supabase.from('records').insert({
           user_id: currentUser.id,
@@ -633,6 +634,16 @@ function normalizeDate(str) {
   const parts = str.split(/[-/\.]/);
   if (parts.length === 3) return `${parts[0]}-${String(parts[1]).padStart(2,'0')}-${String(parts[2]).padStart(2,'0')}`;
   return str;
+}
+
+// 日期排序键：让 "2026/03~05" 排到 3月，"2026/03/17" 精确排
+function dateSortKey(date) {
+  if (!date) return '9999-99-99';
+  let m = date.match(/^(\d{4})[-/\.](\d{1,2})[-/\.](\d{1,2})/);
+  if (m) return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+  m = date.match(/^(\d{4})[-/\.](\d{1,2})/);
+  if (m) return `${m[1]}-${String(m[2]).padStart(2,'0')}-00`;
+  return date;
 }
 
 // ====== 键盘快捷键 ======
