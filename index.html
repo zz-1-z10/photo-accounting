@@ -14,358 +14,138 @@
 body {
   font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   background: #f5f7fa;
-  color: #1a1a2e;
-  padding: 0;
-  max-width: 640px;
-  margin: 0 auto;
+  color: #1a1a2e; padding: 0;
+  max-width: 640px; margin: 0 auto;
 }
 .page { display: none; padding: 16px; padding-bottom: 80px; }
 .page.active { display: block; }
-h1 {
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: #16213e;
-  margin: 20px 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
+h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; margin: 20px 0 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
 /* ====== 登录页 ====== */
-.auth-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 90vh;
-  padding: 30px 20px;
-}
-.auth-box {
-  background: #fff;
-  border-radius: 20px;
-  padding: 30px 24px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-}
-.auth-box .logo {
-  text-align: center;
-  font-size: 48px;
-  margin-bottom: 8px;
-}
-.auth-box .title {
-  text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-  color: #16213e;
-  margin-bottom: 4px;
-}
-.auth-box .subtitle {
-  text-align: center;
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 24px;
-}
-.auth-tabs {
-  display: flex;
-  gap: 0;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1.5px solid #e0e0e0;
-}
-.auth-tab {
-  flex: 1;
-  padding: 10px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  background: #fafafa;
-  color: #999;
-  border: none;
-  transition: all 0.2s;
-}
+.auth-container { display: flex; flex-direction: column; justify-content: center; min-height: 90vh; padding: 30px 20px; }
+.auth-box { background: #fff; border-radius: 20px; padding: 30px 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+.auth-box .logo { text-align: center; font-size: 48px; margin-bottom: 8px; }
+.auth-box .title { text-align: center; font-size: 20px; font-weight: 700; color: #16213e; margin-bottom: 4px; }
+.auth-box .subtitle { text-align: center; font-size: 14px; color: #999; margin-bottom: 24px; }
+.auth-tabs { display: flex; gap: 0; margin-bottom: 20px; border-radius: 10px; overflow: hidden; border: 1.5px solid #e0e0e0; }
+.auth-tab { flex:1; padding:10px; text-align:center; font-size:15px; font-weight:500; cursor:pointer; background:#fafafa; color:#999; border:none; }
 .auth-tab.active { background: #4361ee; color: #fff; }
 .auth-form { display: none; flex-direction: column; gap: 14px; }
 .auth-form.active { display: flex; }
-.auth-form input {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 16px;
-  font-family: inherit;
-  background: #fafafa;
-  transition: border-color 0.2s;
-}
-.auth-form input:focus { outline: none; border-color: #4361ee; background: #fff; }
-.auth-form .btn-auth {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #4361ee, #3a0ca3);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s, opacity 0.15s;
-}
-.auth-form .btn-auth:active { transform: scale(0.98); opacity: 0.85; }
-.auth-form .btn-auth:disabled { opacity: 0.5; }
-.auth-error {
-  background: #fff0f0;
-  color: #e63946;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  display: none;
-  text-align: center;
-}
-.auth-error.show { display: block; }
-.auth-loading {
-  text-align: center;
-  color: #999;
-  font-size: 14px;
-  padding: 20px 0;
-}
-.auth-success {
-  text-align: center;
-  color: #2d6a4f;
-  font-size: 15px;
-  padding: 14px 0;
-  background: #edf7f0;
-  border-radius: 10px;
-  display: none;
-}
-.auth-success.show { display: block; }
+.auth-form input { width:100%; padding:12px 14px; border:1.5px solid #e0e0e0; border-radius:10px; font-size:16px; font-family:inherit; background:#fafafa; }
+.auth-form input:focus { outline:none; border-color:#4361ee; background:#fff; }
+.auth-form .btn-auth { width:100%; padding:14px; background:linear-gradient(135deg,#4361ee,#3a0ca3); color:#fff; border:none; border-radius:12px; font-size:17px; font-weight:600; cursor:pointer; }
+.auth-form .btn-auth:active { transform:scale(0.98); opacity:0.85; }
+.auth-form .btn-auth:disabled { opacity:0.5; }
+.auth-error { background:#fff0f0; color:#e63946; padding:10px 14px; border-radius:10px; font-size:14px; display:none; text-align:center; }
+.auth-error.show { display:block; }
+.auth-loading { text-align:center; color:#999; font-size:14px; padding:20px 0; }
+.auth-success { text-align:center; color:#2d6a4f; font-size:15px; padding:14px 0; background:#edf7f0; border-radius:10px; display:none; }
+.auth-success.show { display:block; }
 
 /* ====== 用户栏 ====== */
-.user-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 16px;
-  margin: 0 16px;
-  margin-top: 16px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-}
-.user-bar .user-email {
-  font-size: 13px;
-  color: #666;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
-.user-bar .btn-logout {
-  background: none;
-  border: none;
-  font-size: 13px;
-  color: #e63946;
-  cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-.user-bar .btn-logout:active { background: #fee; }
+.user-bar { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; margin:0 16px; margin-top:16px; background:#fff; border-radius:12px; box-shadow:0 1px 6px rgba(0,0,0,0.04); }
+.user-bar .user-email { font-size:13px; color:#666; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+.user-bar .btn-logout { background:none; border:none; font-size:13px; color:#e63946; cursor:pointer; padding:4px 10px; border-radius:6px; flex-shrink:0; }
 
 /* ====== 表单 ====== */
-.form-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  margin: 0 16px 16px;
-}
-.form-row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.form-row:last-child { margin-bottom: 0; }
-.form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.form-group label {
-  font-size: 13px;
-  color: #666;
-  font-weight: 500;
-}
-.form-group input {
-  padding: 10px 12px;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 16px;
-  background: #fafafa;
-  transition: border-color 0.2s;
-  font-family: inherit;
-  width: 100%;
-  max-width: 100%;
-}
-.form-group input:focus {
-  outline: none;
-  border-color: #4361ee;
-  background: #fff;
-}
-.btn-submit {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #4361ee, #3a0ca3);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s, opacity 0.15s;
-}
-.btn-submit:active { transform: scale(0.98); opacity: 0.85; }
-.btn-cost-toggle {
-  width: 100%;
-  padding: 12px;
-  background: none;
-  border: 1.5px dashed #ccc;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #666;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: all 0.2s;
-}
-.btn-cost-toggle:hover { border-color: #e63946; color: #e63946; background: #fff5f5; }
-.btn-cost-toggle.open { border-color: #e63946; background: #fff5f5; color: #e63946; }
-.cost-panel { display: none; margin-top: 0; border-top: none; padding-top: 0; }
-.cost-panel.open { display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
-.cost-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 2px; }
-.cost-header .cost-total-label { font-size: 14px; color: #333; font-weight: 500; }
-.cost-header .cost-total-amount { font-size: 18px; font-weight: 700; color: #e63946; }
-.cost-btn-clear { background: none; border: none; font-size: 12px; color: #bbb; cursor: pointer; padding: 2px 6px; }
-.cost-btn-clear:active { color: #e63946; }
-.cost-list { display: flex; flex-direction: column; gap: 6px; }
-.cost-item { display: flex; gap: 8px; align-items: center; }
-.cost-item input { padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: #fafafa; font-family: inherit; }
-.cost-item input:focus { outline: none; border-color: #e63946; background: #fff; }
-.cost-item .cost-input-desc { flex: 3; width: 0; min-width: 0; }
-.cost-item .cost-input-amount { flex: 1.2; width: 0; min-width: 0; }
-.cost-item .cost-btn-del { background: none; border: none; font-size: 16px; color: #ccc; cursor: pointer; padding: 0 2px; flex-shrink: 0; }
-.cost-item .cost-btn-del:active { color: #e63946; }
-.cost-add-row { margin-top: 6px; padding: 8px; background: none; border: 1px dashed #ddd; border-radius: 8px; font-size: 13px; color: #999; cursor: pointer; width: 100%; }
-.cost-add-row:active { background: #fafafa; }
-.cost-list.collapsed .cost-item:nth-child(n+3) { display: none; }
-.cost-toggle-btn { display: block; width: 100%; text-align: center; padding: 6px; font-size: 13px; color: #999; background: none; border: none; cursor: pointer; margin-top: 2px; }
+.form-card { background:#fff; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); margin:0 16px 16px; }
+.form-row { display:flex; gap:12px; margin-bottom:12px; }
+.form-row:last-child { margin-bottom:0; }
+.form-group { flex:1; display:flex; flex-direction:column; gap:4px; }
+.form-group label { font-size:13px; color:#666; font-weight:500; }
+.form-group input { padding:10px 12px; border:1.5px solid #e0e0e0; border-radius:10px; font-size:16px; background:#fafafa; font-family:inherit; width:100%; }
+.form-group input:focus { outline:none; border-color:#4361ee; background:#fff; }
+.btn-submit { width:100%; padding:14px; background:linear-gradient(135deg,#4361ee,#3a0ca3); color:#fff; border:none; border-radius:12px; font-size:17px; font-weight:600; cursor:pointer; }
+.btn-submit:active { transform:scale(0.98); opacity:0.85; }
+.btn-cost-toggle { width:100%; padding:12px; background:none; border:1.5px dashed #ccc; border-radius:12px; font-size:15px; font-weight:500; color:#666; cursor:pointer; margin-top:10px; }
+.btn-cost-toggle:hover { border-color:#e63946; color:#e63946; background:#fff5f5; }
+.btn-cost-toggle.open { border-color:#e63946; background:#fff5f5; color:#e63946; }
+.cost-panel { display:none; margin-top:0; border-top:none; padding-top:0; }
+.cost-panel.open { display:block; margin-top:12px; padding-top:12px; border-top:1px solid #f0f0f0; }
+.cost-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 2px; }
+.cost-header .cost-total-label { font-size:14px; color:#333; font-weight:500; }
+.cost-header .cost-total-amount { font-size:18px; font-weight:700; color:#e63946; }
+.cost-btn-clear { background:none; border:none; font-size:12px; color:#bbb; cursor:pointer; padding:2px 6px; }
+.cost-list { display:flex; flex-direction:column; gap:6px; }
+.cost-item { display:flex; gap:8px; align-items:center; }
+.cost-item input { padding:8px 10px; border:1.5px solid #e0e0e0; border-radius:8px; font-size:14px; background:#fafafa; font-family:inherit; }
+.cost-item input:focus { outline:none; border-color:#e63946; background:#fff; }
+.cost-item .cost-input-desc { flex:3; width:0; min-width:0; }
+.cost-item .cost-input-amount { flex:1.2; width:0; min-width:0; }
+.cost-item .cost-btn-del { background:none; border:none; font-size:16px; color:#ccc; cursor:pointer; padding:0 2px; flex-shrink:0; }
+.cost-add-row { margin-top:6px; padding:8px; background:none; border:1px dashed #ddd; border-radius:8px; font-size:13px; color:#999; cursor:pointer; width:100%; }
+.cost-list.collapsed .cost-item:nth-child(n+3) { display:none; }
+.cost-toggle-btn { display:block; width:100%; text-align:center; padding:6px; font-size:13px; color:#999; background:none; border:none; cursor:pointer; margin-top:2px; }
 
 /* ====== 统计 ====== */
-.stats-bar {
-  display: flex;
-  justify-content: space-around;
-  background: linear-gradient(135deg, #16213e, #1a1a2e);
-  color: #fff;
-  border-radius: 14px;
-  padding: 16px 20px;
-  margin: 0 16px 16px;
-}
-.stat-item { text-align: center; }
-.stat-label { font-size: 12px; opacity: 0.7; }
-.stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
+.stats-bar { display:flex; justify-content:space-around; background:linear-gradient(135deg,#16213e,#1a1a2e); color:#fff; border-radius:14px; padding:16px 20px; margin:0 16px 16px; }
+.stat-item { text-align:center; }
+.stat-label { font-size:12px; opacity:0.7; }
+.stat-value { font-size:22px; font-weight:700; margin-top:2px; }
 
-/* ====== 列表 ====== */
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 16px 10px;
+/* ====== 按日期分组列表 ====== */
+.list-header { display:flex; justify-content:space-between; align-items:center; margin:0 16px 10px; }
+.list-header h2 { font-size:16px; color:#333; }
+.btn-clear { background:none; border:none; font-size:13px; color:#e63946; cursor:pointer; padding:4px 8px; border-radius:6px; }
+.date-group { margin:0 16px; }
+.date-group + .date-group { margin-top:12px; }
+.date-header {
+  background:#fff; border-radius:12px 12px 0 0; padding:10px 16px 8px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:14px; font-weight:600; color:#16213e; border-bottom:1px solid #f0f0f0;
 }
-.list-header h2 { font-size: 16px; color: #333; }
-.btn-clear { background: none; border: none; font-size: 13px; color: #e63946; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
-.btn-clear:active { background: #fee; }
-.record-list { display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
-.record-item {
-  background: #fff; border-radius: 12px; padding: 14px 16px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-  display: flex; align-items: center; justify-content: space-between;
+.date-header .date-label { display:flex; align-items:center; gap:4px; }
+.date-header .date-total { font-size:15px; color:#2d6a4f; }
+.date-records { background:#fff; border-radius:0 0 12px 12px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,0.05); }
+.date-records .record-item {
+  padding:10px 16px; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid #f5f5f5;
 }
-.record-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.record-order { font-size: 12px; color: #4361ee; font-weight: 600; background: #eef1ff; display: inline-block; padding: 1px 8px; border-radius: 10px; width: fit-content; }
-.record-date { font-size: 13px; color: #666; margin-top: 2px; }
-.record-note { font-size: 13px; color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
-.record-price { font-size: 18px; font-weight: 700; color: #2d6a4f; display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: 10px; }
-.btn-del { background: none; border: none; font-size: 18px; color: #ccc; cursor: pointer; padding: 0 4px; }
-.btn-del:active { color: #e63946; }
-.empty-state { text-align: center; color: #aaa; padding: 40px 0; font-size: 15px; }
+.date-records .record-item:last-child { border-bottom:none; }
+.record-item .record-num { font-size:12px; color:#4361ee; font-weight:600; background:#eef1ff; padding:1px 8px; border-radius:10px; }
+.record-item .record-note-text { font-size:13px; color:#999; margin-left:8px; max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.record-item .record-price-text { font-size:16px; font-weight:700; color:#2d6a4f; }
+.record-item .btn-del { background:none; border:none; font-size:16px; color:#ccc; cursor:pointer; padding:0 4px; margin-left:6px; }
+.empty-state { text-align:center; color:#aaa; padding:40px 0; font-size:15px; margin:0 16px; }
 
-/* ====== 同步 / 安装 ====== */
-.sync-bar { text-align: center; font-size: 12px; color: #bbb; padding: 4px 0 0; margin: 0 16px; }
-.sync-bar.syncing { color: #4361ee; }
-.sync-bar.error { color: #e63946; }
+/* ====== 文本查看弹窗 ====== */
+.modal-overlay {
+  display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.4); z-index:100; overflow-y:auto;
+  padding:20px 16px; padding-bottom:60px;
+}
+.modal-overlay.open { display:block; }
+.modal-content { background:#fff; border-radius:16px; padding:20px; max-width:640px; margin:20px auto; }
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.modal-header h3 { font-size:18px; color:#16213e; }
+.modal-close { background:none; border:none; font-size:22px; color:#999; cursor:pointer; }
+.text-view { font-size:14px; line-height:1.8; color:#333; white-space:pre-wrap; font-family:monospace; }
 
-.install-bar {
-  display: none;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 16px 8px;
-  padding: 10px 14px;
-  background: #eef1ff;
-  border-radius: 10px;
-  font-size: 13px;
-  color: #4361ee;
-}
-.install-bar.show { display: flex; }
-.install-bar .install-btn {
-  background: #4361ee;
-  color: #fff;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.install-bar .install-btn:active { opacity: 0.8; }
-.install-bar .install-close {
-  background: none;
-  border: none;
-  color: #999;
-  font-size: 16px;
-  cursor: pointer;
-  margin-left: 4px;
-  flex-shrink: 0;
-}
-.install-bar .install-text { flex: 1; }
+/* ====== 同步 ====== */
+.sync-bar { text-align:center; font-size:12px; color:#bbb; padding:4px 0 0; margin:0 16px; }
+.sync-bar.syncing { color:#4361ee; }
+.sync-bar.error { color:#e63946; }
 
 /* ====== 底部工具栏 ====== */
 .toolbar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: #fff;
-  border-top: 1px solid #eee;
-  padding: 8px 16px;
-  padding-bottom: max(8px, env(safe-area-inset-bottom));
-  display: flex;
-  gap: 10px;
-  max-width: 640px;
-  margin: 0 auto;
+  position:fixed; bottom:0; left:0; right:0;
+  background:#fff; border-top:1px solid #eee;
+  padding:8px 16px; padding-bottom:max(8px,env(safe-area-inset-bottom));
+  display:flex; gap:10px; max-width:640px; margin:0 auto; align-items:center;
 }
 .toolbar button {
-  flex: 1;
-  padding: 12px;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 10px;
-  background: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
+  padding:12px; border:1.5px solid #e0e0e0; border-radius:10px;
+  background:#fff; font-size:14px; font-weight:500; color:#333; cursor:pointer;
 }
-.toolbar button:active { background: #f5f5f5; }
-.toolbar button.export-btn { color: #4361ee; border-color: #4361ee; }
+.toolbar button:active { background:#f5f5f5; }
+.toolbar .btn-small {
+  padding:8px 10px; font-size:12px; flex:0 0 auto;
+  color:#4361ee; border-color:#4361ee;
+}
+.toolbar .btn-text {
+  flex:1; color:#2d6a4f; border-color:#2d6a4f;
+}
 </style>
 </head>
 <body>
@@ -377,25 +157,22 @@ h1 {
       <div class="logo">📸</div>
       <div class="title">拍照记账</div>
       <div class="subtitle">登录后数据自动同步到云端</div>
-
       <div class="auth-tabs">
         <button class="auth-tab active" data-tab="login">登录</button>
         <button class="auth-tab" data-tab="register">注册</button>
       </div>
-
       <form class="auth-form active" id="loginForm">
         <div class="auth-error" id="loginError"></div>
-        <input type="email" id="loginEmail" placeholder="邮箱" required autocomplete="email">
-        <input type="password" id="loginPassword" placeholder="密码（至少6位）" required autocomplete="current-password">
+        <input type="email" id="loginEmail" placeholder="邮箱" required>
+        <input type="password" id="loginPassword" placeholder="密码（至少6位）" required>
         <button class="btn-auth" id="loginBtn">登录</button>
         <div class="auth-loading" id="loginLoading" style="display:none;">登录中...</div>
       </form>
-
       <form class="auth-form" id="registerForm">
         <div class="auth-error" id="registerError"></div>
         <div class="auth-success" id="registerSuccess">✅ 注册成功！正在登录...</div>
-        <input type="email" id="regEmail" placeholder="邮箱" required autocomplete="email">
-        <input type="password" id="regPassword" placeholder="密码（至少6位）" required autocomplete="new-password">
+        <input type="email" id="regEmail" placeholder="邮箱" required>
+        <input type="password" id="regPassword" placeholder="密码（至少6位）" required>
         <button class="btn-auth" id="registerBtn">注册</button>
         <div class="auth-loading" id="registerLoading" style="display:none;">注册中...</div>
       </form>
@@ -405,13 +182,11 @@ h1 {
 
 <!-- ====== 记账 App ====== -->
 <div id="appPage" class="page">
-
   <div class="user-bar">
     <span class="user-email" id="userEmail"></span>
     <button class="btn-logout" id="logoutBtn">退出</button>
   </div>
 
-  <!-- 录入 -->
   <div class="form-card" style="margin-top:12px;">
     <div class="form-row">
       <div class="form-group">
@@ -435,54 +210,42 @@ h1 {
     <div class="cost-panel" id="costPanel">
       <div class="cost-header">
         <span class="cost-total-label">总成本</span>
-        <span>
-          <button class="cost-btn-clear" id="costClearBtn">清空</button>
-          <span class="cost-total-amount" id="costTotal">0.00</span> 元
-        </span>
+        <span><button class="cost-btn-clear" id="costClearBtn">清空</button><span class="cost-total-amount" id="costTotal">0.00</span> 元</span>
       </div>
       <div class="cost-list" id="costList"></div>
       <button class="cost-add-row" id="costAddBtn">➕ 添加一项</button>
     </div>
   </div>
 
-  <!-- 安装提示 -->
-  <div class="install-bar" id="installBar">
-    <span class="install-text">📲 添加到主屏幕，像 App 一样用</span>
-    <span>
-      <button class="install-btn" id="installBtn">安装</button>
-      <button class="install-close" id="installClose">✕</button>
-    </span>
-  </div>
+  <div class="sync-bar" id="syncBar">☁️ 数据已同步到云端</div>
 
-  <!-- 同步状态 -->
-  <div class="sync-bar" id="syncBar">数据已同步到云端 ☁️</div>
-
-  <!-- 统计 -->
   <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-label">总单数</div>
-      <div class="stat-value" id="totalCount">0</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">总金额（元）</div>
-      <div class="stat-value" id="grandTotal">0.00</div>
-    </div>
+    <div class="stat-item"><div class="stat-label">总单数</div><div class="stat-value" id="totalCount">0</div></div>
+    <div class="stat-item"><div class="stat-label">总金额（元）</div><div class="stat-value" id="grandTotal">0.00</div></div>
   </div>
 
-  <!-- 记录 -->
   <div class="list-header">
     <h2>📋 每单明细</h2>
-    <button class="btn-clear" id="btnClearAll">清空全部</button>
+    <button class="btn-clear" id="btnClearAll">清空</button>
   </div>
-  <div class="record-list" id="recordList">
-    <div class="empty-state">还没有记录，记第一单吧 ✍️</div>
+  <div id="recordContainer"></div>
+</div>
+
+<!-- ====== 文本查看弹窗 ====== -->
+<div class="modal-overlay" id="textModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>📄 账本文本形式</h3>
+      <button class="modal-close" id="textModalClose">✕</button>
+    </div>
+    <div class="text-view" id="textViewContent"></div>
   </div>
 </div>
 
-<!-- 底部工具栏 -->
+<!-- ====== 底部工具栏 ====== -->
 <div class="toolbar" id="toolbar" style="display:none;">
-  <button id="btnExportCSV" class="export-btn">📤 导出 CSV</button>
-  <button id="btnExportTXT">📄 导出文本</button>
+  <button class="btn-small" id="btnImport">📥导入</button>
+  <button class="btn-text" id="btnTextView">📄 查看文本形式</button>
 </div>
 
 <script type="module">
@@ -507,7 +270,7 @@ function showPage(page) {
   toolbar.style.display = page === appPage ? 'flex' : 'none';
 }
 
-// ====== 认证 UI ======
+// ====== 认证 ======
 document.querySelectorAll('.auth-tab').forEach(tab => {
   tab.addEventListener('click', function() {
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -519,31 +282,16 @@ document.querySelectorAll('.auth-tab').forEach(tab => {
   });
 });
 
-function setLoading(formId, loading) {
-  document.getElementById(formId + 'Btn').disabled = loading;
-  document.getElementById(formId + 'Loading').style.display = loading ? 'block' : 'none';
-}
-
-function showError(formId, msg) {
-  const el = document.getElementById(formId + 'Error');
-  el.textContent = msg;
-  el.classList.add('show');
-}
+function setLoading(f, v) { document.getElementById(f+'Btn').disabled = v; document.getElementById(f+'Loading').style.display = v ? 'block' : 'none'; }
+function showError(f, m) { const e=document.getElementById(f+'Error'); e.textContent=m; e.classList.add('show'); }
 
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   setLoading('login', true);
   document.getElementById('loginError').classList.remove('show');
-
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({ email: document.getElementById('loginEmail').value.trim(), password: document.getElementById('loginPassword').value });
   setLoading('login', false);
-
-  if (error) {
-    showError('login', error.message.includes('Invalid login credentials') ? '邮箱或密码错误' : error.message);
-  }
+  if (error) showError('login', error.message.includes('Invalid login credentials') ? '邮箱或密码错误' : error.message);
 });
 
 document.getElementById('registerForm').addEventListener('submit', async function(e) {
@@ -551,32 +299,17 @@ document.getElementById('registerForm').addEventListener('submit', async functio
   setLoading('register', true);
   document.getElementById('registerError').classList.remove('show');
   document.getElementById('registerSuccess').classList.remove('show');
-
   const email = document.getElementById('regEmail').value.trim();
   const password = document.getElementById('regPassword').value;
-
-  if (password.length < 6) {
-    showError('register', '密码至少6位');
-    setLoading('register', false);
-    return;
-  }
-
+  if (password.length < 6) { showError('register', '密码至少6位'); setLoading('register', false); return; }
   const { error } = await supabase.auth.signUp({ email, password });
   setLoading('register', false);
-
-  if (error) {
-    showError('register', error.message);
-  } else {
-    document.getElementById('registerSuccess').classList.add('show');
-    document.getElementById('registerBtn').textContent = '注册成功 ✓';
-  }
+  if (error) showError('register', error.message);
+  else { document.getElementById('registerSuccess').classList.add('show'); document.getElementById('registerBtn').textContent = '注册成功 ✓'; }
 });
 
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await supabase.auth.signOut();
-});
+document.getElementById('logoutBtn').addEventListener('click', async () => { await supabase.auth.signOut(); });
 
-// ====== 认证状态 ======
 supabase.auth.onAuthStateChange((event, session) => {
   if (session) {
     currentUser = session.user;
@@ -586,13 +319,11 @@ supabase.auth.onAuthStateChange((event, session) => {
   } else {
     currentUser = null;
     showPage(authPage);
-    document.getElementById('loginBtn').textContent = '登录';
-    document.getElementById('registerBtn').textContent = '注册';
+    document.querySelectorAll('.auth-form button').forEach(b => b.disabled = false);
     document.querySelectorAll('.auth-loading').forEach(l => l.style.display = 'none');
     document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
     document.querySelectorAll('.auth-success').forEach(s => s.classList.remove('show'));
-    document.querySelectorAll('.auth-form button').forEach(b => b.disabled = false);
-    document.getElementById('recordList').innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>';
+    document.getElementById('recordContainer').innerHTML = '';
     document.getElementById('totalCount').textContent = '0';
     document.getElementById('grandTotal').textContent = '0.00';
     document.getElementById('costTotal').textContent = '0.00';
@@ -600,100 +331,81 @@ supabase.auth.onAuthStateChange((event, session) => {
   }
 });
 
-// ====== 安装到桌面 ======
-let deferredPrompt = null;
-const installBar = document.getElementById('installBar');
-const installBtn = document.getElementById('installBtn');
-const installClose = document.getElementById('installClose');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-const isInstalled = window.matchMedia('(display-mode: standalone)').matches
-  || window.matchMedia('(display-mode: fullscreen)').matches
-  || navigator.standalone === true;
-
-if (!isInstalled) {
-  // 显示安装提示条
-  installBar.classList.add('show');
-
-  installBtn.addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        installBar.classList.remove('show');
-      }
-      deferredPrompt = null;
-    } else {
-      alert('请点 Chrome 右上角三个点 ☰\n→ 添加到主屏幕\n→ 添加');
-    }
-  });
-
-  installClose.addEventListener('click', () => {
-    installBar.classList.remove('show');
-  });
-}
-
-// ====== 同步状态 ======
-function setSyncing(show) {
-  syncBar.textContent = show ? '⏳ 同步中...' : '☁️ 数据已同步到云端';
-  syncBar.className = show ? 'sync-bar syncing' : 'sync-bar';
-}
-function setSyncError(msg) {
-  syncBar.textContent = '⚠️ ' + msg;
-  syncBar.className = 'sync-bar error';
-}
-
 // ====== 数据 ======
 let records = [];
 let costs = [];
 let costExpanded = false;
 
+function setSyncing(v) { syncBar.textContent = v ? '⏳ 同步中...' : '☁️ 数据已同步到云端'; syncBar.className = v ? 'sync-bar syncing' : 'sync-bar'; }
+function setSyncError(m) { syncBar.textContent = '⚠️ '+m; syncBar.className = 'sync-bar error'; }
+
 async function loadAllData() {
   if (!currentUser) return;
   setSyncing(true);
   try {
-    const [recRes, costRes] = await Promise.all([
+    const [rR, cR] = await Promise.all([
       supabase.from('records').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: true }),
       supabase.from('costs').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: true })
     ]);
-    if (recRes.error) throw recRes.error;
-    if (costRes.error) throw costRes.error;
-    records = recRes.data || [];
-    costs = costRes.data || [];
+    if (rR.error) throw rR.error;
+    if (cR.error) throw cR.error;
+    records = rR.data || [];
+    costs = cR.data || [];
     renderRecords();
     renderCosts();
     setSyncing(false);
-  } catch (e) {
-    setSyncError(e.message);
-  }
+  } catch(e) { setSyncError(e.message); }
 }
 
-// ====== 渲染 ======
+// ====== 渲染：按日期分组 ======
 function renderRecords() {
-  const listEl = document.getElementById('recordList');
+  const container = document.getElementById('recordContainer');
   const totalCountEl = document.getElementById('totalCount');
   const grandTotalEl = document.getElementById('grandTotal');
-  let grandTotal = 0;
 
   if (records.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>';
-  } else {
-    listEl.innerHTML = records.map((r, i) => {
-      const price = parseFloat(r.price) || 0;
-      grandTotal += price;
-      const noteHtml = r.note ? `<div class="record-note">📌 ${r.note}</div>` : '';
-      return `<div class="record-item"><div class="record-info"><div class="record-order">第 ${i+1} 单</div><div class="record-date">📅 ${r.date}</div>${noteHtml}</div><div class="record-price">${price.toFixed(2)} 元<button class="btn-del" data-id="${r.id}">✕</button></div></div>`;
-    }).join('');
+    container.innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>';
+    totalCountEl.textContent = '0';
+    grandTotalEl.textContent = '0.00';
+    return;
   }
 
+  // 按日期分组
+  const groups = {};
+  records.forEach((r, i) => {
+    const d = r.date || '未知日期';
+    if (!groups[d]) groups[d] = [];
+    // 保存原始序号
+    groups[d].push({ ...r, seq: i + 1 });
+  });
+
+  let grandTotal = 0;
+  let html = '';
+
+  // 获取排序后的日期列表
+  const dateList = Object.keys(groups).sort();
+
+  dateList.forEach(date => {
+    const items = groups[date];
+    let dayTotal = 0;
+    items.forEach(r => { dayTotal += parseFloat(r.price) || 0; grandTotal += parseFloat(r.price) || 0; });
+
+    html += `<div class="date-group"><div class="date-header"><span class="date-label">📅 ${date}</span><span class="date-total">${dayTotal.toFixed(2)} 元</span></div><div class="date-records">`;
+
+    items.forEach(r => {
+      const p = parseFloat(r.price) || 0;
+      const note = r.note ? `<span class="record-note-text">📌 ${r.note}</span>` : '';
+      html += `<div class="record-item"><div><span class="record-num">第 ${r.seq} 单</span>${note}</div><div><span class="record-price-text">${p.toFixed(2)} 元</span><button class="btn-del" data-id="${r.id}">✕</button></div></div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
   totalCountEl.textContent = records.length;
   grandTotalEl.textContent = grandTotal.toFixed(2);
 
-  listEl.querySelectorAll('.btn-del').forEach(btn => {
+  container.querySelectorAll('.btn-del').forEach(btn => {
     btn.addEventListener('click', async function() {
       const id = this.dataset.id;
       if (!confirm('确定删除？')) return;
@@ -704,23 +416,20 @@ function renderRecords() {
   });
 }
 
+// ====== 渲染成本 ======
 function renderCosts() {
   const listEl = document.getElementById('costList');
   const totalEl = document.getElementById('costTotal');
   let total = 0;
   costs.forEach(c => { total += parseFloat(c.amount) || 0; });
   totalEl.textContent = total.toFixed(2);
-
   if (costs.length === 0) { listEl.innerHTML = ''; return; }
-
-  const showToggle = costs.length > 2;
+  const st = costs.length > 2;
   listEl.innerHTML = costs.map((c, i) => {
-    const amt = parseFloat(c.amount) || 0;
-    const desc = escHtml(c.description);
-    return `<div class="cost-item"><input class="cost-input-desc" type="text" value="${desc}" placeholder="成本项目" data-cid="${c.id}" data-field="desc"><input class="cost-input-amount" type="number" value="${amt||''}" placeholder="金额" min="0" step="0.01" data-cid="${c.id}" data-field="amount"><button class="cost-btn-del" data-cid="${c.id}">✕</button></div>`;
+    const a = parseFloat(c.amount) || 0;
+    return `<div class="cost-item"><input class="cost-input-desc" type="text" value="${escHtml(c.description)}" placeholder="成本项目" data-cid="${c.id}" data-field="desc"><input class="cost-input-amount" type="number" value="${a||''}" placeholder="金额" min="0" step="0.01" data-cid="${c.id}" data-field="amount"><button class="cost-btn-del" data-cid="${c.id}">✕</button></div>`;
   }).join('');
-
-  if (showToggle) {
+  if (st) {
     listEl.classList.add('collapsed');
     if (costExpanded) listEl.classList.remove('collapsed');
     const tb = document.createElement('button');
@@ -729,12 +438,10 @@ function renderCosts() {
     tb.onclick = () => { costExpanded = !costExpanded; renderCosts(); };
     listEl.appendChild(tb);
   } else { listEl.classList.remove('collapsed'); costExpanded = false; }
-
   let timers = {};
   listEl.querySelectorAll('.cost-input-desc, .cost-input-amount').forEach(inp => {
     inp.addEventListener('input', function() {
-      const cid = this.dataset.cid;
-      const field = this.dataset.field;
+      const cid = this.dataset.cid, field = this.dataset.field;
       const cost = costs.find(c => c.id === cid);
       if (!cost) return;
       if (field === 'amount') cost.amount = parseFloat(this.value) || 0;
@@ -742,12 +449,9 @@ function renderCosts() {
       let t = 0; costs.forEach(c => { t += parseFloat(c.amount) || 0; });
       document.getElementById('costTotal').textContent = t.toFixed(2);
       clearTimeout(timers[cid]);
-      timers[cid] = setTimeout(async () => {
-        await supabase.from('costs').update({ [field]: cost[field] }).eq('id', cid);
-      }, 1000);
+      timers[cid] = setTimeout(async () => { await supabase.from('costs').update({ [field]: cost[field] }).eq('id', cid); }, 1000);
     });
   });
-
   listEl.querySelectorAll('.cost-btn-del').forEach(btn => {
     btn.addEventListener('click', async function() {
       const cid = this.dataset.cid;
@@ -758,12 +462,9 @@ function renderCosts() {
   });
 }
 
-function escHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s; return d.innerHTML;
-}
+function escHtml(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
-// ====== 新增 ======
+// ====== 新增记账 ======
 document.getElementById('btnAdd').addEventListener('click', async function() {
   const date = document.getElementById('inputDate').value;
   const price = document.getElementById('inputPrice').value;
@@ -781,64 +482,160 @@ document.getElementById('btnAdd').addEventListener('click', async function() {
 
 // ====== 成本 ======
 document.getElementById('btnCostToggle').addEventListener('click', function() {
-  const isOpen = document.getElementById('costPanel').classList.toggle('open');
-  this.classList.toggle('open', isOpen);
-  this.textContent = isOpen ? '💰 收起成本' : '💰 成本';
+  const o = document.getElementById('costPanel').classList.toggle('open');
+  this.classList.toggle('open', o);
+  this.textContent = o ? '💰 收起成本' : '💰 成本';
 });
-
 document.getElementById('costAddBtn').addEventListener('click', async function() {
   const { data, error } = await supabase.from('costs').insert({ user_id: currentUser.id, description: '', amount: 0 }).select();
   if (error) { setSyncError(error.message); return; }
-  costs.push(data[0]);
-  renderCosts();
+  costs.push(data[0]); renderCosts();
   const items = document.querySelectorAll('.cost-item');
-  if (items.length > 0) items[items.length-1].querySelector('.cost-input-desc').focus();
+  if (items.length) items[items.length-1].querySelector('.cost-input-desc').focus();
 });
-
 document.getElementById('costClearBtn').addEventListener('click', async function() {
   if (!confirm('确定清空所有成本项？')) return;
   for (const c of costs) await supabase.from('costs').delete().eq('id', c.id);
   costs = []; renderCosts();
 });
-
-// ====== 清空 / 导出 ======
 document.getElementById('btnClearAll').addEventListener('click', async function() {
   if (!confirm('确定清空全部记录？')) return;
   for (const r of records) await supabase.from('records').delete().eq('id', r.id);
   records = []; renderRecords();
 });
 
-document.getElementById('btnExportCSV').addEventListener('click', function() {
-  if (!records.length) { alert('没有记录'); return; }
-  let csv = '\uFEFF第几单,日期,价钱,备注\n';
-  let t = 0;
-  records.forEach((r,i) => { t += parseFloat(r.price)||0; csv += `${i+1},${r.date},${parseFloat(r.price).toFixed(2)},${r.note||''}\n`; });
-  csv += `合计,,${t.toFixed(2)},\n`;
-  downloadFile(csv, `拍照记账_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8');
-});
+// ====== 查看文本形式 ======
+document.getElementById('btnTextView').addEventListener('click', function() {
+  const modal = document.getElementById('textModal');
+  const content = document.getElementById('textViewContent');
 
-document.getElementById('btnExportTXT').addEventListener('click', function() {
-  if (!records.length) { alert('没有记录'); return; }
-  let txt = '=== 拍照记账 ===\n\n';
-  let t = 0;
-  records.forEach((r,i) => { t += parseFloat(r.price)||0; txt += `第${i+1}单 [${r.date}] ${(parseFloat(r.price)||0).toFixed(2)}元${r.note?' 📌 '+r.note:''}\n`; });
-  if (costs.length) {
-    txt += '\n--- 成本 ---\n'; let ct = 0;
-    costs.forEach(c => { ct += parseFloat(c.amount)||0; txt += `  ${c.description||'(未命名)'}：${(parseFloat(c.amount)||0).toFixed(2)}元\n`; });
-    txt += `  合计：${ct.toFixed(2)}元\n`;
+  let txt = '=== 拍照记账 ===\n';
+
+  // 成本
+  if (costs.length > 0) {
+    txt += '\n--- 成本 ---\n';
+    let ct = 0;
+    costs.forEach(c => { const a=parseFloat(c.amount)||0; ct+=a; txt += `  ${c.description||'(未命名)'}：${a.toFixed(2)}元\n`; });
+    txt += `  成本合计：${ct.toFixed(2)}元\n`;
   }
-  txt += `\n总单数：${records.length}\n总收入：${t.toFixed(2)} 元\n导出：${new Date().toLocaleString('zh-CN')}\n`;
-  downloadFile(txt, `拍照记账_${new Date().toISOString().slice(0,10)}.txt`, 'text/plain;charset=utf-8');
+
+  // 汇总
+  let gt = 0;
+  records.forEach(r => { gt += parseFloat(r.price) || 0; });
+  txt += `\n总单数：${records.length}\n总金额：${gt.toFixed(2)} 元\n\n`;
+
+  // 按日期分组
+  const groups = {};
+  records.forEach((r, i) => {
+    const d = r.date || '未知日期';
+    if (!groups[d]) groups[d] = [];
+    groups[d].push({ ...r, seq: i + 1 });
+  });
+
+  const dateList = Object.keys(groups).sort();
+  dateList.forEach(date => {
+    const items = groups[date];
+    let dt = 0;
+    items.forEach(r => { dt += parseFloat(r.price) || 0; });
+    txt += `📅 ${date}  —  ${dt.toFixed(2)}元\n`;
+    items.forEach(r => {
+      const p = parseFloat(r.price) || 0;
+      txt += `  第${r.seq}单  ${p.toFixed(2)}元`;
+      if (r.note) txt += `  📌 ${r.note}`;
+      txt += '\n';
+    });
+  });
+
+  content.textContent = txt;
+  modal.classList.add('open');
 });
 
-function downloadFile(c, f, m) {
-  const b = new Blob([c], { type: m });
-  const u = URL.createObjectURL(b);
-  const a = document.createElement('a'); a.href = u; a.download = f;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(u);
+document.getElementById('textModalClose').addEventListener('click', () => {
+  document.getElementById('textModal').classList.remove('open');
+});
+document.getElementById('textModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+// ====== 导入 ======
+document.getElementById('btnImport').addEventListener('click', function() {
+  const text = prompt('粘贴旧账本数据（一行一条）：\n\n格式示例：\n2026/03/17-第1单-金额：50.\n2026/03~05-第2单-金额：50.\n2026-01-01 100 张三');
+  if (!text || !text.trim()) return;
+
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  let imported = 0;
+
+  lines.forEach(line => {
+    if (/^(日期|date|单价|小计|合计|━━|===|#)/i.test(line)) return;
+    if (/^[─═━=]+$/.test(line)) return;
+
+    let date = '', price = 0, note = '';
+    let m;
+
+    // 格式1: "2026/03/17-第1单-金额：50." 或 "2026/03~05-第2单-金额：50."
+    m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*$/);
+    if (m) { date = m[1]; price = parseFloat(m[2]); }
+    else {
+      // 格式2: "2026/03/17-第1单-金额：50.-备注"
+      m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*-\s*(.+)$/);
+      if (m) { date = m[1]; price = parseFloat(m[2]); note = m[3].trim(); }
+      else {
+        // 格式3: 标准 "2024-01-01 100 备注"
+        m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
+        if (m) { date = normalizeDate(m[1]); price = parseFloat(m[2]); note = m[3].trim(); }
+        else {
+          // 格式4: CSV "2024-01-01,100,备注"
+          m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
+          if (m) { date = normalizeDate(m[1]); price = parseFloat(m[2]); note = (m[3]||'').trim(); }
+        }
+      }
+    }
+
+    if (date && price > 0) {
+      // 检查是否已存在相同数据
+      const exists = records.some(r => r.date === date && Math.abs(parseFloat(r.price) - price) < 0.01 && r.note === note);
+      if (!exists) {
+        records.push({ date, price, note });
+        imported++;
+      }
+    }
+  });
+
+  if (imported === 0) {
+    alert('未能识别出有效数据，或数据已存在。\n\n格式示例：\n2026/03/17-第1单-金额：50.\n2026/03~05-第2单-金额：50.');
+    return;
+  }
+
+  // 批量存到云端
+  (async () => {
+    setSyncing(true);
+    try {
+      // 只取最后 imported 条上传
+      const newItems = records.slice(-imported);
+      for (const item of newItems) {
+        await supabase.from('records').insert({
+          user_id: currentUser.id,
+          date: item.date,
+          price: item.price,
+          note: item.note || ''
+        });
+      }
+      // 重新加载全部数据
+      await loadAllData();
+      alert(`✅ 成功导入 ${imported} 条记录！`);
+    } catch(e) {
+      setSyncError(e.message);
+    }
+  })();
+});
+
+function normalizeDate(str) {
+  const parts = str.split(/[-/\.]/);
+  if (parts.length === 3) return `${parts[0]}-${String(parts[1]).padStart(2,'0')}-${String(parts[2]).padStart(2,'0')}`;
+  return str;
 }
 
+// ====== 键盘快捷键 ======
 document.getElementById('inputPrice').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnAdd').click(); });
 document.getElementById('inputNote').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnAdd').click(); });
 document.getElementById('inputDate').value = new Date().toISOString().slice(0, 10);
