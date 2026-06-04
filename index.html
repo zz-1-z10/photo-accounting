@@ -240,13 +240,21 @@ function apiHeaders() {
 }
 
 async function api(method, url, body) {
-  const opt = { method: method, headers: apiHeaders() };
-  if (body) opt.body = JSON.stringify(body);
-  const res = await fetch(url, opt);
+  var opt = { method: method, headers: apiHeaders() };
+  if (body) {
+    opt.body = JSON.stringify(body);
+    if (method === 'POST') opt.headers['Prefer'] = 'return=representation';
+  }
+  var res = await fetch(url, opt);
   if (res.status === 204) return null;
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || data.error_description || data.msg || '请求失败');
-  return data;
+  try {
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error_description || data.msg || '请求失败');
+    return data;
+  } catch (e) {
+    if (res.ok) return null; // 空响应也算成功
+    throw e;
+  }
 }
 
 // 日期排序键
@@ -702,6 +710,21 @@ $('doImportBtn').onclick = async function() {
       }
     }
     if (date && price > 0) {
+      // 处理 ~ 日期：2026/03~05 → 转为 2026-03-01
+      if (date.indexOf('~') !== -1) {
+        var parts = date.split('~');
+        date = parts[0].replace(/[/\.]/g, '-');
+        // 补全到 YYYY-MM-01
+        if (date.match(/^\d{4}-\d{1,2}$/)) date = date + '-01';
+      } else {
+        date = date.replace(/[/\.]/g, '-');
+        // 补全到 YYYY-MM-DD
+        var dm = date.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if (!dm) {
+          dm = date.match(/^(\d{4})-(\d{1,2})$/);
+          if (dm) date = dm[1] + '-' + dm[2].padStart(2,'0') + '-01';
+        }
+      }
       items.push({ date: date, price: price, note: note });
     }
   }
