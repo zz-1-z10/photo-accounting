@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>拍照记账本</title>
+<title>拍照记账</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -67,6 +67,11 @@ h1 span { font-size: 26px; }
   border-color: #4361ee;
   background: #fff;
 }
+.form-group textarea {
+  resize: vertical;
+  min-height: 38px;
+  max-height: 80px;
+}
 .btn-submit {
   width: 100%;
   padding: 14px;
@@ -107,7 +112,7 @@ h1 span { font-size: 26px; }
 /* 统计栏 */
 .stats-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   background: linear-gradient(135deg, #16213e, #1a1a2e);
   color: #fff;
   border-radius: 14px;
@@ -149,16 +154,35 @@ h1 span { font-size: 26px; }
   transition: transform 0.15s;
 }
 .record-item:active { transform: scale(0.98); }
-.record-info { display: flex; flex-direction: column; gap: 2px; }
-.record-date { font-size: 13px; color: #666; }
-.record-detail { font-size: 15px; color: #333; font-weight: 500; }
-.record-total {
+.record-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.record-order {
+  font-size: 12px;
+  color: #4361ee;
+  font-weight: 600;
+  background: #eef1ff;
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  width: fit-content;
+}
+.record-date { font-size: 13px; color: #666; margin-top: 2px; }
+.record-note {
+  font-size: 13px;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+.record-price {
   font-size: 18px;
   font-weight: 700;
   color: #2d6a4f;
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
+  margin-left: 10px;
 }
 .btn-del {
   background: none;
@@ -301,7 +325,7 @@ h1 span { font-size: 26px; }
 </head>
 <body>
 
-<h1><span>📸</span> 拍照记账本</h1>
+<h1><span>📸</span> 拍照记账</h1>
 
 <!-- 录入表单 -->
 <div class="form-card">
@@ -311,20 +335,17 @@ h1 span { font-size: 26px; }
       <input type="date" id="inputDate">
     </div>
     <div class="form-group">
-      <label>🔢 单数</label>
-      <input type="number" id="inputCount" placeholder="多少单" min="1" step="1">
+      <label>💰 价钱（元）</label>
+      <input type="number" id="inputPrice" placeholder="这单多少钱" min="0" step="0.01">
     </div>
   </div>
   <div class="form-row">
     <div class="form-group">
-      <label>💰 单价（元）</label>
-      <input type="number" id="inputPrice" placeholder="每单多少钱" min="0" step="0.01">
+      <label>📝 备注 <span style="color:#aaa;font-weight:400;">（可选）</span></label>
+      <input type="text" id="inputNote" placeholder="比如：张三、婚礼跟拍...">
     </div>
   </div>
-  <div style="font-size:14px;color:#666;margin-bottom:10px;text-align:right;">
-    小计：<strong id="previewTotal">0.00</strong> 元
-  </div>
-  <button class="btn-submit" id="btnAdd">➕ 添加记录</button>
+  <button class="btn-submit" id="btnAdd">➕ 记一单</button>
 </div>
 
 <!-- 导入面板 -->
@@ -335,14 +356,13 @@ h1 span { font-size: 26px; }
   </h3>
   <div class="import-hint">
     <strong>支持格式（每行一条）：</strong><br>
-    📌 <code>2024-01-01 10 5</code> &nbsp;（日期 单数 单价）<br>
-    📌 <code>2024-01-01 10单 5元</code> &nbsp;（带单位）<br>
-    📌 <code>2024/1/1 10×5</code> &nbsp;（乘号分隔）<br>
-    📌 <code>1/1 10单×5元</code> &nbsp;（简写日期）<br>
+    📌 <code>2024-01-01 5</code> &nbsp;（日期 价钱）<br>
+    📌 <code>2024-01-01 5 张三</code> &nbsp;（日期 价钱 备注）<br>
+    📌 <code>1/1 5</code> &nbsp;（简写日期）<br>
     📌 CSV 文件上传 &nbsp;·&nbsp; 也支持 Excel 另存为 CSV 导入
   </div>
   <div class="form-group" style="margin-bottom:8px;">
-    <textarea id="importText" rows="5" placeholder="把旧账本粘贴到这里...&#10;例如：&#10;2024-01-01 10 5&#10;2024-01-02 8 6.5&#10;2024-01-03 12 5.5"></textarea>
+    <textarea id="importText" rows="5" placeholder="把旧账本粘贴到这里...&#10;例如：&#10;2024-01-01 5&#10;2024-01-02 6.5&#10;2024-01-03 5.5 婚礼跟拍"></textarea>
   </div>
   <div class="import-actions">
     <button class="btn-submit-sm" id="btnParseImport">🔍 识别并预览</button>
@@ -357,7 +377,7 @@ h1 span { font-size: 26px; }
     </div>
     <div style="max-height:200px;overflow-y:auto;margin-top:6px;">
       <table class="import-preview-table" id="previewTable">
-        <thead><tr><th>日期</th><th>单数</th><th>单价</th><th>小计</th></tr></thead>
+        <thead><tr><th>日期</th><th>价钱</th><th>备注</th></tr></thead>
         <tbody id="previewBody"></tbody>
       </table>
     </div>
@@ -375,22 +395,18 @@ h1 span { font-size: 26px; }
     <div class="stat-value" id="totalCount">0</div>
   </div>
   <div class="stat-item">
-    <div class="stat-label">总金额</div>
+    <div class="stat-label">总金额（元）</div>
     <div class="stat-value" id="grandTotal">0.00</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-label">记录数</div>
-    <div class="stat-value" id="recordCount">0</div>
   </div>
 </div>
 
 <!-- 记录列表 -->
 <div class="list-header">
-  <h2>📋 记账明细</h2>
+  <h2>📋 每单明细</h2>
   <button class="btn-clear" id="btnClearAll">清空全部</button>
 </div>
 <div class="record-list" id="recordList">
-  <div class="empty-state">还没有记录，开始记账吧 ✍️</div>
+  <div class="empty-state">还没有记录，记第一单吧 ✍️</div>
 </div>
 
 <!-- 底部工具栏 -->
@@ -402,7 +418,7 @@ h1 span { font-size: 26px; }
 
 <script>
 // ========== 数据层 ==========
-const STORAGE_KEY = 'photo_accounting_records';
+const STORAGE_KEY = 'photo_accounting_records2';
 
 function loadRecords() {
   try {
@@ -414,37 +430,31 @@ function saveRecords(records) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
-// ========== 计算 ==========
-function calcTotal(price, count) {
-  return (parseFloat(price) || 0) * (parseInt(count) || 0);
-}
-
 // ========== 渲染 ==========
 function render() {
   const records = loadRecords();
   const listEl = document.getElementById('recordList');
   const totalCountEl = document.getElementById('totalCount');
   const grandTotalEl = document.getElementById('grandTotal');
-  const recordCountEl = document.getElementById('recordCount');
 
-  let grandCount = 0;
   let grandTotal = 0;
 
   if (records.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">还没有记录，开始记账吧 ✍️</div>';
+    listEl.innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>';
   } else {
     listEl.innerHTML = records.map((r, i) => {
-      const total = calcTotal(r.price, r.count);
-      grandCount += parseInt(r.count) || 0;
-      grandTotal += total;
+      const price = parseFloat(r.price) || 0;
+      grandTotal += price;
+      const noteHtml = r.note ? `<div class="record-note">📌 ${r.note}</div>` : '';
       return `
         <div class="record-item">
           <div class="record-info">
+            <div class="record-order">第 ${i + 1} 单</div>
             <div class="record-date">📅 ${r.date}</div>
-            <div class="record-detail">${r.count} 单 × ${parseFloat(r.price).toFixed(2)} 元</div>
+            ${noteHtml}
           </div>
-          <div class="record-total">
-            ${total.toFixed(2)} 元
+          <div class="record-price">
+            ${price.toFixed(2)} 元
             <button class="btn-del" data-index="${i}">✕</button>
           </div>
         </div>
@@ -452,9 +462,8 @@ function render() {
     }).join('');
   }
 
-  totalCountEl.textContent = grandCount;
+  totalCountEl.textContent = records.length;
   grandTotalEl.textContent = grandTotal.toFixed(2);
-  recordCountEl.textContent = records.length;
 
   listEl.querySelectorAll('.btn-del').forEach(btn => {
     btn.addEventListener('click', function(e) {
@@ -466,9 +475,9 @@ function render() {
 }
 
 // ========== 操作 ==========
-function addRecord(date, count, price) {
+function addRecord(date, price, note) {
   const records = loadRecords();
-  records.push({ date, count: parseInt(count), price: parseFloat(price) });
+  records.push({ date, price: parseFloat(price), note: note || '' });
   saveRecords(records);
   render();
 }
@@ -502,57 +511,36 @@ function smartParse(text) {
   const yearNow = new Date().getFullYear();
 
   for (const rawLine of lines) {
-    // 跳过表头/分隔线/合计行
-    if (/^(日期|date|单数|单价|小计|合计|━━|===|序号|#)/i.test(rawLine)) continue;
+    if (/^(日期|date|价钱|单价|小计|合计|备注|━━|===|序号|#)/i.test(rawLine)) continue;
     if (/^[─═━=]+$/.test(rawLine)) continue;
 
     let line = rawLine;
-
-    // 去掉行号前缀 "1. " "1) " "1、"
     line = line.replace(/^\d+[\.\)、》\s]+/, '');
 
-    // 尝试各种格式
-    let date = '', count = 0, price = 0;
+    let date = '', price = 0, note = '';
 
-    // --- 格式1: 标准 CSV "2024-01-01,10,5" 或 "2024-01-01,10,5,50" ---
-    let m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s*[,，\s]+\s*(\d+)\s*[,，\s]+\s*(\d+(?:\.\d+)?)/);
-    if (m) { date = normalizeDate(m[1]); count = parseInt(m[2]); price = parseFloat(m[3]); }
+    // 格式1: "2024-01-01 5" 或 "2024-01-01 5 张三" (日期 + 价钱 + 可选备注)
+    let m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
+    if (m) { date = normalizeDate(m[1]); price = parseFloat(m[2]); note = m[3].trim(); }
     else {
-      // --- 格式2: "1/1 10单 5元" → 补充当前年 ---
-      m = line.match(/^(\d{1,2})[-/](\d{1,2})\s+(\d+)\s*单?\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*元?/);
+      // 格式2: "1/1 5" (简写日期)
+      m = line.match(/^(\d{1,2})[-/](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
       if (m) {
         date = `${yearNow}-${pad(m[1])}-${pad(m[2])}`;
-        count = parseInt(m[3]); price = parseFloat(m[4]);
+        price = parseFloat(m[3]); note = m[4].trim();
       } else {
-        // --- 格式3: "2024-01-01 10单×5元" ---
-        m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s+(\d+)\s*单?\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*元?/);
-        if (m) { date = normalizeDate(m[1]); count = parseInt(m[2]); price = parseFloat(m[3]); }
+        // 格式3: CSV "2024-01-01,5" 或 "2024-01-01,5,张三"
+        m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
+        if (m) { date = normalizeDate(m[1]); price = parseFloat(m[2]); note = (m[3]||'').trim(); }
         else {
-          // --- 格式4: "1/1 10 5" (简写日期，空格分隔) ---
-          m = line.match(/^(\d{1,2})[-/](\d{1,2})\s+(\d+)\s+(\d+(?:\.\d+)?)/);
-          if (m) {
-            date = `${yearNow}-${pad(m[1])}-${pad(m[2])}`;
-            count = parseInt(m[3]); price = parseFloat(m[4]);
-          } else {
-            // --- 格式5: "2024.1.1 10单 5元" (带单位的空格分隔) ---
-            m = line.match(/^(\d{4})[-/\.](\d{1,2})[-/\.](\d{1,2})\s+(\d+)\s*单\s+(\d+(?:\.\d+)?)\s*元/);
-            if (m) { date = `${m[1]}-${pad(m[2])}-${pad(m[3])}`; count = parseInt(m[4]); price = parseFloat(m[5]); }
-            else {
-              // --- 格式6: 纯空格分隔 "2024-01-01 10 5" 最通用 ---
-              m = line.match(/^(\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})\s+(\d+)\s+(\d+(?:\.\d+)?)/);
-              if (m) { date = normalizeDate(m[1]); count = parseInt(m[2]); price = parseFloat(m[3]); }
-              else {
-                errors.push(`无法解析: ${rawLine}`);
-                continue;
-              }
-            }
-          }
+          errors.push(`无法解析: ${rawLine}`);
+          continue;
         }
       }
     }
 
-    if (date && count > 0 && price > 0) {
-      results.push({ date, count, price });
+    if (date && price > 0) {
+      results.push({ date, price, note });
     } else {
       errors.push(`数据无效: ${rawLine}`);
     }
@@ -564,7 +552,6 @@ function smartParse(text) {
 function pad(n) { return String(n).padStart(2, '0'); }
 
 function normalizeDate(str) {
-  // 支持 2024-01-01 / 2024/01/01 / 2024.1.1 统一成 2024-01-01
   const parts = str.split(/[-/\.]/);
   if (parts.length === 3) {
     return `${parts[0]}-${pad(parts[1])}-${pad(parts[2])}`;
@@ -594,15 +581,14 @@ function showImportPreview(results) {
     return;
   }
 
-  let grandCount = 0, grandTotal = 0;
-  body.innerHTML = results.map(r => {
-    const total = calcTotal(r.price, r.count);
-    grandCount += r.count;
-    grandTotal += total;
-    return `<tr><td>${r.date}</td><td>${r.count}</td><td>${r.price.toFixed(2)}</td><td>${total.toFixed(2)}</td></tr>`;
+  let grandTotal = 0;
+  body.innerHTML = results.map((r, i) => {
+    grandTotal += r.price;
+    const noteDisplay = r.note ? r.note : '—';
+    return `<tr><td>${r.date}</td><td>${r.price.toFixed(2)}</td><td>${noteDisplay}</td></tr>`;
   }).join('') +
   `<tr style="font-weight:600;background:#f8f9fc;">
-    <td>合计</td><td>${grandCount}</td><td></td><td>${grandTotal.toFixed(2)}</td>
+    <td>共 ${results.length} 单</td><td>${grandTotal.toFixed(2)}</td><td></td>
   </tr>`;
 
   countEl.textContent = `共识别 ${results.length} 条记录`;
@@ -615,17 +601,15 @@ function exportCSV() {
   const records = loadRecords();
   if (records.length === 0) { alert('没有记录可导出'); return; }
 
-  let csv = '\uFEFF日期,单数,单价,小计\n';
-  let grandCount = 0;
+  let csv = '\uFEFF第几单,日期,价钱,备注\n';
   let grandTotal = 0;
 
-  records.forEach(r => {
-    const total = calcTotal(r.price, r.count);
-    grandCount += parseInt(r.count) || 0;
-    grandTotal += total;
-    csv += `${r.date},${r.count},${parseFloat(r.price).toFixed(2)},${total.toFixed(2)}\n`;
+  records.forEach((r, i) => {
+    grandTotal += parseFloat(r.price) || 0;
+    const note = r.note ? `,${r.note}` : ',';
+    csv += `${i+1},${r.date},${parseFloat(r.price).toFixed(2)}${note}\n`;
   });
-  csv += `合计,,${grandCount},${grandTotal.toFixed(2)}\n`;
+  csv += `合计,,${grandTotal.toFixed(2)},\n`;
 
   downloadFile(csv, `拍照记账_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8');
 }
@@ -634,21 +618,19 @@ function exportTXT() {
   const records = loadRecords();
   if (records.length === 0) { alert('没有记录可导出'); return; }
 
-  let txt = '=== 拍照记账本 ===\n\n';
-  let grandCount = 0;
+  let txt = '=== 拍照记账 ===\n\n';
   let grandTotal = 0;
 
   records.forEach((r, i) => {
-    const total = calcTotal(r.price, r.count);
-    grandCount += parseInt(r.count) || 0;
-    grandTotal += total;
-    txt += `${i+1}. [${r.date}] ${r.count}单 × ${parseFloat(r.price).toFixed(2)}元 = ${total.toFixed(2)}元\n`;
+    const price = parseFloat(r.price) || 0;
+    grandTotal += price;
+    const noteStr = r.note ? `  📌 ${r.note}` : '';
+    txt += `第${i+1}单  [${r.date}]  ${price.toFixed(2)}元${noteStr}\n`;
   });
 
   txt += `\n━━━━━━━━━━━━━━━━━━\n`;
-  txt += `总单数：${grandCount}\n`;
+  txt += `总单数：${records.length}\n`;
   txt += `总金额：${grandTotal.toFixed(2)} 元\n`;
-  txt += `记录数：${records.length}\n`;
   txt += `导出时间：${new Date().toLocaleString('zh-CN')}\n`;
 
   downloadFile(txt, `拍照记账_${new Date().toISOString().slice(0,10)}.txt`, 'text/plain;charset=utf-8');
@@ -666,36 +648,32 @@ function downloadFile(content, filename, mimeType) {
   URL.revokeObjectURL(url);
 }
 
-// ========== 预览小计 ==========
-function updatePreview() {
-  const count = parseInt(document.getElementById('inputCount').value) || 0;
-  const price = parseFloat(document.getElementById('inputPrice').value) || 0;
-  document.getElementById('previewTotal').textContent = (count * price).toFixed(2);
-}
-
 // ========== 初始化 ==========
 document.addEventListener('DOMContentLoaded', function() {
   const today = new Date().toISOString().slice(0, 10);
   document.getElementById('inputDate').value = today;
 
-  document.getElementById('inputCount').addEventListener('input', updatePreview);
-  document.getElementById('inputPrice').addEventListener('input', updatePreview);
+  // 回车快速提交
+  document.getElementById('inputPrice').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('btnAdd').click();
+  });
+  document.getElementById('inputNote').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('btnAdd').click();
+  });
 
   // 添加记录
   document.getElementById('btnAdd').addEventListener('click', function() {
     const date = document.getElementById('inputDate').value;
-    const count = document.getElementById('inputCount').value;
     const price = document.getElementById('inputPrice').value;
+    const note = document.getElementById('inputNote').value.trim();
 
     if (!date) { alert('请选择日期'); return; }
-    if (!count || parseInt(count) <= 0) { alert('请输入有效的单数'); return; }
-    if (!price || parseFloat(price) <= 0) { alert('请输入有效的单价'); return; }
+    if (!price || parseFloat(price) <= 0) { alert('请输入有效的价钱'); return; }
 
-    addRecord(date, count, price);
-    document.getElementById('inputCount').value = '';
+    addRecord(date, price, note);
     document.getElementById('inputPrice').value = '';
-    document.getElementById('previewTotal').textContent = '0.00';
-    document.getElementById('inputCount').focus();
+    document.getElementById('inputNote').value = '';
+    document.getElementById('inputPrice').focus();
   });
 
   // 清空
@@ -707,12 +685,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ====== 导入功能 ======
 
-  // 打开导入面板
   document.getElementById('btnImport').addEventListener('click', function() {
     toggleImportPanel(true);
   });
 
-  // 关闭导入面板
   document.getElementById('closeImport').addEventListener('click', function() {
     toggleImportPanel(false);
   });
@@ -720,7 +696,6 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleImportPanel(false);
   });
 
-  // 解析导入文本
   document.getElementById('btnParseImport').addEventListener('click', function() {
     const text = document.getElementById('importText').value;
     if (!text.trim()) { alert('请先粘贴或输入旧账本数据'); return; }
@@ -728,7 +703,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const { results, errors } = smartParse(text);
 
     if (results.length === 0) {
-      alert('未能识别出任何有效记录。\n\n请检查格式，例如：\n2024-01-01 10 5\n2024-01-02 8 6.5');
+      alert('未能识别出任何有效记录。\n\n请检查格式，例如：\n2024-01-01 5\n2024-01-02 6.5');
       return;
     }
 
@@ -739,7 +714,6 @@ document.addEventListener('DOMContentLoaded', function() {
     showImportPreview(results);
   });
 
-  // CSV 文件上传
   document.getElementById('csvFileInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -748,7 +722,6 @@ document.addEventListener('DOMContentLoaded', function() {
     reader.onload = function(ev) {
       const text = ev.target.result;
       document.getElementById('importText').value = text;
-      // 自动触发解析
       const { results, errors } = smartParse(text);
       if (results.length > 0) {
         showImportPreview(results);
@@ -756,16 +729,13 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('解析错误行:', errors);
         }
       } else {
-        alert('未能从文件中识别出有效记录。\n确认文件是 CSV 格式，包含 日期、单数、单价 三列。');
+        alert('未能从文件中识别出有效记录。\n确认文件是 CSV 格式，包含 日期、价钱 两列。');
       }
     };
     reader.readAsText(file, 'UTF-8');
-
-    // 重置 input 以便重复上传同一文件
     this.value = '';
   });
 
-  // 确认导入
   document.getElementById('btnConfirmImport').addEventListener('click', function() {
     if (parsedImportRecords.length === 0) {
       alert('没有可导入的数据，请先识别');
