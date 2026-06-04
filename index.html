@@ -374,8 +374,10 @@ async function loadData() {
 }
 
 // ====== 渲染记录（按日期排序并分组）=====
+var showAllRecords = false;
+
 function renderRecords() {
-  const container = $('recordContainer');
+  var container = $('recordContainer');
   if (records.length === 0) {
     container.innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>';
     $('totalCount').textContent = '0';
@@ -383,26 +385,27 @@ function renderRecords() {
     return;
   }
 
-  // 先按日期排序，再分配序号
-  const sorted = records.slice().sort(function(a, b) {
+  // 按日期排序（升序用于分配序号，降序用于展示）
+  var sorted = records.slice().sort(function(a, b) {
     return dateKey(a.date) > dateKey(b.date) ? 1 : -1;
   });
 
   // 按日期分组
-  const groups = {};
+  var groups = {};
   sorted.forEach(function(r, i) {
     var d = r.date || '未知日期';
     if (!groups[d]) groups[d] = [];
     groups[d].push({ id: r.id, date: r.date, price: r.price, note: r.note, seq: i + 1 });
   });
 
+  // 日期列表（降序：最新在上）
+  var dateList = Object.keys(groups).sort(function(a, b) {
+    return dateKey(a) < dateKey(b) ? 1 : -1; // 降序
+  });
+
   var grandTotal = 0;
   var html = '';
-
-  // 排序日期
-  var dateList = Object.keys(groups).sort(function(a, b) {
-    return dateKey(a) > dateKey(b) ? 1 : -1;
-  });
+  var showCount = showAllRecords ? dateList.length : Math.min(2, dateList.length);
 
   for (var di = 0; di < dateList.length; di++) {
     var date = dateList[di];
@@ -413,7 +416,9 @@ function renderRecords() {
       grandTotal += parseFloat(items[ii].price) || 0;
     }
 
-    html += '<div class="date-group">' +
+    // 只渲染前 showCount 天，剩下的隐藏
+    var style = di < showCount ? '' : ' style="display:none"';
+    html += '<div class="date-group"' + style + '>' +
       '<div class="date-header"><span>📅 ' + date + '</span><span class="date-total">' + dayTotal.toFixed(2) + ' 元</span></div>' +
       '<div class="date-records">';
 
@@ -430,9 +435,22 @@ function renderRecords() {
     html += '</div></div>';
   }
 
+  // 展开/收起按钮
+  if (dateList.length > 2) {
+    html += '<div style="text-align:center;margin:10px 16px 0">' +
+      '<button class="btn-secondary" id="toggleAllBtn" onclick="toggleAllRecords()" style="padding:8px 20px;font-size:14px;border-radius:10px;border:1.5px solid #4361ee;color:#4361ee;background:#fff;cursor:pointer">' +
+      (showAllRecords ? '▲ 收起' : '▼ 展开全部明细') +
+      '</button></div>';
+  }
+
   container.innerHTML = html;
   $('totalCount').textContent = records.length;
   $('grandTotal').textContent = grandTotal.toFixed(2);
+}
+
+function toggleAllRecords() {
+  showAllRecords = !showAllRecords;
+  renderRecords();
 }
 
 async function deleteRecord(id) {
@@ -456,7 +474,12 @@ $('btnAdd').onclick = async function() {
     price: parseFloat(price),
     note: note
   });
-  records.push(result);
+  // 处理可能返回数组的情况
+  if (Array.isArray(result) && result.length > 0) {
+    records.push(result[0]);
+  } else if (result) {
+    records.push(result);
+  }
   renderRecords();
   $('inputPrice').value = '';
   $('inputNote').value = '';
@@ -744,7 +767,11 @@ $('doImportBtn').onclick = async function() {
         price: item.price,
         note: item.note || ''
       });
-      records.push(result);
+      if (Array.isArray(result) && result.length > 0) {
+        records.push(result[0]);
+      } else if (result) {
+        records.push(result);
+      }
       ok++;
     } catch (e) {
       err++;
