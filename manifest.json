@@ -1,7 +1,7 @@
 {
-  "name": "拍照记账",
-  "short_name": "拍照记账",
-  "description": "拍照记账本 - 记录每一单，算清每一笔",
+  "name": "纯纯拍照记账",
+  "short_name": "纯纯拍照记账",
+  "description": "纯纯拍照记账 - 记录每一单，算清每一笔",
   "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
