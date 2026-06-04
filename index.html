@@ -261,20 +261,52 @@ function cEdit(inp){const id=inp.dataset.cid,f=inp.dataset.field,c=costs.find(x=
 function openImport(){$('importModal').classList.add('open');$('importText').value=''}
 function closeImport(){$('importModal').classList.remove('open')}
 
-async function parseImport(){const text=$('importText').value;if(!text.trim()){alert('请粘贴数据');return}
-const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length);const items=[]
-lines.forEach(line=>{if(/^(日期|date|单价|小计|合计|━━|===|#)/i.test(line)||/^[─═━=]+$/.test(line))return
-let d='',p=0,n='',m
-m=line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*$/);if(m){d=m[1];p=+m[2]}
-else{m=line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*[-—](.+)$/);if(m){d=m[1];p=+m[2];n=m[3].trim()}
-else{m=line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);if(m){d=m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');p=+m[4];n=m[5].trim()}
-else{m=line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);if(m){d=m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');p=+m[4];n=(m[5]||'').trim()}}}}
-if(d&&p>0)items.push({date:d,price:p,note:n})})
-if(!items.length){alert('未能识别出有效数据');return}
-if(!confirm(`识别到 ${items.length} 条记录，确认导入？`))return
-sync(true);let ok=0
-try{for(const item of items){const r=await api('POST',R+'/records',{user_id:user.id,date:item.date,price:item.price,note:item.note||''});records.push(r);ok++}records.sort((a,b)=>dk(a.date)>dk(b.date)?1:-1);renderR();closeImport();alert('✅ 成功导入 '+ok+' 条记录！')}catch(e){$('syncBar').textContent='⚠️ '+e.message}
-sync(false)}
+async function parseImport(){
+  const text = $('importText').value;
+  if(!text.trim()){alert('请粘贴数据');return}
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l.length);
+  const items = [];
+  for(let idx=0;idx<lines.length;idx++){
+    const line = lines[idx];
+    if(/^(日期|date|单价|小计|合计|━━|===|#)/i.test(line))continue;
+    if(/^[─═━=]+$/.test(line))continue;
+    let d='',p=0,n='',m;
+    // 格式1: 2026/03/17-第1单-金额：50.
+    m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*$/);
+    if(m){d=m[1];p=+m[2]}
+    else{
+      // 格式2: 2026/03/17-第1单-金额：50.-备注
+      m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*[-—](.+)$/);
+      if(m){d=m[1];p=+m[2];n=m[3].trim()}
+      else{
+        // 格式3: 2026-01-01 50 备注
+        m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
+        if(m){d=m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');p=+m[4];n=m[5].trim()}
+        else{
+          // 格式4: 2026-01-01,50,备注
+          m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
+          if(m){d=m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');p=+m[4];n=(m[5]||'').trim()}
+        }
+      }
+    }
+    if(d&&p>0)items.push({date:d,price:p,note:n});
+  }
+  if(!items.length){alert('未能识别出有效数据。请检查格式。');return}
+  if(!confirm('识别到 '+items.length+' 条记录，确认导入？'))return;
+  $('syncBar').textContent='⏳ 正在导入 '+items.length+' 条...';
+  let ok=0,err=0;
+  for(const item of items){
+    try{
+      const r=await api('POST',R+'/records',{user_id:user.id,date:item.date,price:item.price,note:item.note||''});
+      records.push(r);ok++;
+    }catch(e){err++}
+  }
+  records.sort((a,b)=>dk(a.date)>dk(b.date)?1:-1);
+  renderR();
+  closeImport();
+  $('syncBar').textContent='☁️ 导入完成：成功 '+ok+' 条'+(err?'，失败 '+err+' 条':'');
+  if(ok>0)alert('✅ 成功导入 '+ok+' 条记录！'+(err?'\n失败 '+err+' 条（可能有重复）':''));
+}
 
 // ====== 文本查看 ======
 function showTextView(){let t='=== 拍照记账 ===\n'
