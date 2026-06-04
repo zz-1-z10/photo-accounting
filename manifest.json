@@ -2,22 +2,22 @@
   "name": "拍照记账",
   "short_name": "拍照记账",
   "description": "拍照记账本 - 记录每一单，算清每一笔",
-  "start_url": "index.html",
+  "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f5f7fa",
   "theme_color": "#16213e",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "icon.svg",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
