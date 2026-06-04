@@ -349,6 +349,39 @@ h1 {
 .sync-bar.syncing { color: #4361ee; }
 .sync-bar.error { color: #e63946; }
 
+/* 安装提示 */
+.install-bar {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 16px 8px;
+  padding: 10px 14px;
+  background: #eef1ff;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #4361ee;
+}
+.install-bar.show { display: flex; }
+.install-bar .install-btn {
+  background: #4361ee;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.install-bar .install-btn:active { opacity: 0.8; }
+.install-bar .install-close {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
 /* 底部工具栏 */
 .toolbar {
   position: fixed;
@@ -456,6 +489,15 @@ h1 {
       <div class="cost-list" id="costList"></div>
       <button class="cost-add-row" id="costAddBtn">➕ 添加一项</button>
     </div>
+  </div>
+
+  <!-- 安装提示 -->
+  <div class="install-bar" id="installBar">
+    <span id="installText">📲 添加到主屏幕，像 App 一样用</span>
+    <span>
+      <button class="install-btn" id="installBtn">安装</button>
+      <button class="install-close" id="installClose">✕</button>
+    </span>
   </div>
 
   <!-- 同步状态 -->
@@ -908,6 +950,52 @@ document.getElementById('inputPrice').addEventListener('keydown', e => {
 document.getElementById('inputNote').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('btnAdd').click();
 });
+
+// ====== PWA 安装 ======
+let deferredPrompt = null;
+const installBar = document.getElementById('installBar');
+const installBtn = document.getElementById('installBtn');
+const installClose = document.getElementById('installClose');
+const installText = document.getElementById('installText');
+
+// 检测是否已安装（通过 display-mode）
+const isInstalled = window.matchMedia('(display-mode: standalone)').matches
+  || window.matchMedia('(display-mode: fullscreen)').matches
+  || navigator.standalone === true;
+
+if (!isInstalled) {
+  // iOS Safari 总是可以添加到主屏幕
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS) {
+    installBar.classList.add('show');
+    installBtn.textContent = '查看方法';
+    installBtn.addEventListener('click', () => {
+      alert('在 Safari 中：\n1. 点底部中间的 分享按钮 □↑\n2. 往下滑，点"添加到主屏幕"\n3. 点右上角"添加"');
+    });
+  }
+
+  // 安卓 Chrome：监听 beforeinstallprompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBar.classList.add('show');
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const result = await deferredPrompt.userChoice;
+        if (result.outcome === 'accepted') {
+          installBar.classList.remove('show');
+        }
+        deferredPrompt = null;
+      }
+    });
+  });
+
+  // 关闭按钮
+  installClose.addEventListener('click', () => {
+    installBar.classList.remove('show');
+  });
+}
 
 // 默认日期
 document.getElementById('inputDate').value = new Date().toISOString().slice(0, 10);
