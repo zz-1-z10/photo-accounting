@@ -516,11 +516,19 @@ $('addCostBtn').onclick = async function() {
 
   try {
     var result = await api('POST', REST + '/costs', { user_id: user.id, description: '', amount: 0 });
-    // 把临时 id 换成真实 id
-    for (var i = 0; i < costs.length; i++) {
-      if (costs[i].id === tempId) {
-        costs[i].id = result.id;
-        break;
+    // 处理可能返回数组的情况，拿到真实 id
+    var realId = null;
+    if (Array.isArray(result) && result.length > 0) {
+      realId = result[0].id;
+    } else if (result && result.id) {
+      realId = result.id;
+    }
+    if (realId) {
+      for (var i = 0; i < costs.length; i++) {
+        if (costs[i].id === tempId) {
+          costs[i].id = realId;
+          break;
+        }
       }
     }
   } catch (e) {}
