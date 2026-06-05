@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #d6336c; padding: 0; max-width: 640px; margin: 0 auto; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; padding: 0; max-width: 640px; margin: 0 auto; }
 .page { display: none; padding: 16px; padding-bottom: 80px; }
 .page.active { display: block; }
 h1 { text-align: center; font-size: 22px; font-weight: 700; color: #8c1b3d; margin: 20px 0 16px; }
@@ -20,18 +20,18 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #8c1b3d; marg
 .auth-box .logo { text-align: center; font-size: 48px; margin-bottom: 8px; }
 .auth-box .title { text-align: center; font-size: 20px; font-weight: 700; color: #8c1b3d; margin-bottom: 4px; }
 .auth-box .subtitle { text-align: center; font-size: 14px; color: #999; margin-bottom: 24px; }
-.auth-tabs { display: flex; margin-bottom: 20px; border-radius: 10px; overflow: hidden; border: 1.5px solid #e0e0e0; }
-.auth-tab { flex: 1; padding: 10px; text-align: center; font-size: 15px; cursor: pointer; background: #fafafa; color: #999; border: none; }
+.auth-tabs { display: flex; margin-bottom: 20px; border-radius: 10px; overflow: hidden; border: 1.5px solid #ffb6c1; }
+.auth-tab { flex: 1; padding: 10px; text-align: center; font-size: 15px; cursor: pointer; background: #fff; color: #ff85a2; border: none; }
 .auth-tab.active { background: #ff85a2; color: #fff; }
 .auth-form { display: none; flex-direction: column; gap: 14px; }
 .auth-form.active { display: flex; }
-.auth-form input { width: 100%; padding: 12px 14px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 16px; font-family: inherit; background: #fafafa; }
+.auth-form input { width: 100%; padding: 12px 14px; border: 1.5px solid #ffb6c1; border-radius: 10px; font-size: 16px; font-family: inherit; background: #fff5f7; }
 .auth-form input:focus { outline: none; border-color: #ff85a2; background: #fff; }
 .auth-form .btn-auth { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff85a2, #d6336c); color: #fff; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; }
 .auth-error { background: #fff0f0; color: #e63946; padding: 10px 14px; border-radius: 10px; font-size: 14px; display: none; text-align: center; }
 .auth-error.show { display: block; }
-.auth-loading { text-align: center; color: #999; font-size: 14px; padding: 20px 0; display: none; }
-.auth-success { display: none; text-align: center; color: #2d6a4f; font-size: 15px; padding: 14px 0; background: #edf7f0; border-radius: 10px; }
+.auth-loading { text-align: center; color: #ff85a2; font-size: 14px; padding: 20px 0; display: none; }
+.auth-success { display: none; text-align: center; color: #d6336c; font-size: 15px; padding: 14px 0; background: #ffeef2; border-radius: 10px; }
 .auth-success.show { display: block; }
 .user-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; margin: 0 16px; margin-top: 16px; background: #fff; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
 .user-bar .user-email { font-size: 13px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
@@ -40,55 +40,54 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #8c1b3d; marg
 .form-row { display: flex; gap: 10px; margin-bottom: 12px; }
 @media (max-width: 420px) { .form-row { flex-direction: column; gap: 8px; } }
 .form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.form-group label { font-size: 13px; color: #666; font-weight: 500; }
-.form-group input { padding: 10px 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: #fafafa; font-family: inherit; width: 100%; min-width: 0; }
+.form-group label { font-size: 13px; color: #8c1b3d; font-weight: 500; }
+.form-group input { padding: 10px 12px; border: 1.5px solid #ffb6c1; border-radius: 10px; font-size: 16px; background: #fff5f7; font-family: inherit; width: 100%; min-width: 0; }
 .form-group input:focus { outline: none; border-color: #ff85a2; background: #fff; }
-.form-group textarea { padding: 10px 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: #fafafa; font-family: inherit; width: 100%; resize: vertical; min-height: 80px; }
+.form-group textarea { padding: 10px 12px; border: 1.5px solid #ffb6c1; border-radius: 10px; font-size: 16px; background: #fff5f7; font-family: inherit; width: 100%; resize: vertical; min-height: 80px; }
 .form-group textarea:focus { outline: none; border-color: #ff85a2; background: #fff; }
 .btn-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff85a2, #d6336c); color: #fff; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; }
 .btn-submit-sm { padding: 10px 18px; background: linear-gradient(135deg, #ff85a2, #d6336c); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
-.btn-secondary { padding: 10px 18px; background: #f0f0f0; color: #333; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; }
-.btn-cost-toggle { width: calc(100% - 32px); padding: 12px; background: none; border: 1.5px dashed #ccc; border-radius: 12px; font-size: 15px; color: #666; cursor: pointer; margin: 0 16px; }
+.btn-secondary { padding: 10px 18px; background: #fff5f7; color: #d6336c; border: 1px solid #ffb6c1; border-radius: 10px; font-size: 15px; cursor: pointer; }
+.btn-cost-toggle { width: calc(100% - 32px); padding: 12px; background: #fff; border: 1.5px dashed #ffb6c1; border-radius: 12px; font-size: 15px; color: #ff85a2; cursor: pointer; margin: 0 16px; }
 .cost-panel { display: none; background: #fff; border-radius: 16px; padding: 16px 20px; margin: 10px 16px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
 .cost-panel.open { display: block; }
-.cost-panel.open { display: block; }
 .cost-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.cost-header .cost-total-amount { font-size: 18px; font-weight: 700; color: #e63946; }
+.cost-header .cost-total-amount { font-size: 18px; font-weight: 700; color: #d6336c; }
 .cost-btn-clear { background: none; border: none; font-size: 12px; color: #bbb; cursor: pointer; }
 .cost-list { display: flex; flex-direction: column; gap: 6px; }
 .cost-item { display: flex; gap: 6px; align-items: center; }
-.cost-item input { padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: #fafafa; font-family: inherit; width: auto; min-width: 0; }
+.cost-item input { padding: 8px 10px; border: 1.5px solid #ffb6c1; border-radius: 8px; font-size: 14px; background: #fff5f7; font-family: inherit; width: auto; min-width: 0; }
 .cost-item .cost-input-desc { width: 60%; flex: none; }
 .cost-item .cost-input-amount { width: 25%; flex: none; }
 .cost-item .cost-btn-del { background: none; border: none; font-size: 16px; color: #ccc; cursor: pointer; }
-.cost-add-row { margin-top: 6px; padding: 8px; background: none; border: 1px dashed #ddd; border-radius: 8px; font-size: 13px; color: #999; cursor: pointer; width: 100%; }
+.cost-add-row { margin-top: 6px; padding: 8px; background: none; border: 1px dashed #ffb6c1; border-radius: 8px; font-size: 13px; color: #ff85a2; cursor: pointer; width: 100%; }
 .cost-list.collapsed .cost-item:nth-child(n+3) { display: none; }
-.cost-toggle-btn { display: block; width: 100%; text-align: center; padding: 6px; font-size: 13px; color: #999; background: none; border: none; cursor: pointer; }
+.cost-toggle-btn { display: block; width: 100%; text-align: center; padding: 6px; font-size: 13px; color: #ff85a2; background: none; border: none; cursor: pointer; }
 .stats-bar { display: flex; justify-content: space-around; background: linear-gradient(135deg, #8c1b3d, #d6336c); color: #fff; border-radius: 14px; padding: 16px 20px; margin: 0 16px 16px; }
 .stat-item { text-align: center; }
 .stat-label { font-size: 12px; opacity: 0.7; }
 .stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
 .list-header { display: flex; justify-content: space-between; align-items: center; margin: 0 16px 10px; }
-.list-header h2 { font-size: 16px; color: #333; }
+.list-header h2 { font-size: 16px; color: #8c1b3d; }
 .date-group { margin: 0 16px; }
 .date-group + .date-group { margin-top: 12px; }
-.date-header { background: #fff; border-radius: 12px 12px 0 0; padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; color: #8c1b3d; border-bottom: 1px solid #f0f0f0; }
-.date-header .date-total { font-size: 15px; color: #2d6a4f; }
+.date-header { background: #fff; border-radius: 12px 12px 0 0; padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; color: #8c1b3d; border-bottom: 1px solid #ffeef2; }
+.date-header .date-total { font-size: 15px; color: #d6336c; }
 .date-records { background: #fff; border-radius: 0 0 12px 12px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
-.date-records .record-item { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f5f5f5; }
+.date-records .record-item { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ffeef2; }
 .date-records .record-item:last-child { border-bottom: none; }
 .record-item .record-num { font-size: 12px; color: #ff85a2; font-weight: 600; background: #ffeef2; padding: 1px 8px; border-radius: 10px; }
 .record-item .record-note-text { font-size: 13px; color: #999; margin-left: 8px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.record-item .record-price-text { font-size: 16px; font-weight: 700; color: #2d6a4f; }
+.record-item .record-price-text { font-size: 16px; font-weight: 700; color: #d6336c; }
 .record-item .btn-del { background: none; border: none; font-size: 16px; color: #ccc; cursor: pointer; margin-left: 6px; }
-.empty-state { text-align: center; color: #aaa; padding: 40px 0; font-size: 15px; margin: 0 16px; }
+.empty-state { text-align: center; color: #ccc; padding: 40px 0; font-size: 15px; margin: 0 16px; }
 .import-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 200; padding: 20px 16px; }
 .import-modal.open { display: block; }
 .import-modal .modal-box { background: #fff; border-radius: 16px; padding: 20px; max-width: 640px; margin: 20px auto; }
 .import-modal h3 { font-size: 16px; color: #8c1b3d; margin-bottom: 10px; display: flex; justify-content: space-between; }
 .import-modal .close-btn { background: none; border: none; font-size: 20px; color: #999; cursor: pointer; }
-.import-hint { font-size: 13px; color: #888; background: #f8f9fc; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; line-height: 1.7; }
-.import-hint code { background: #ffeef2; color: #ff85a2; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+.import-hint { font-size: 13px; color: #888; background: #ffeef2; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; line-height: 1.7; }
+.import-hint code { background: #ffd6e0; color: #d6336c; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
 .import-actions { display: flex; gap: 10px; margin-top: 10px; }
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 100; padding: 20px 16px 60px; overflow-y: auto; }
 .modal-overlay.open { display: block; }
@@ -98,11 +97,11 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #8c1b3d; marg
 .modal-close { background: none; border: none; font-size: 22px; color: #999; cursor: pointer; }
 .text-view { font-size: 14px; line-height: 1.8; color: #333; white-space: pre-wrap; font-family: monospace; }
 .sync-bar { text-align: center; font-size: 12px; color: #bbb; padding: 4px 0 0; margin: 0 16px; }
-.toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); display: flex; gap: 10px; max-width: 640px; margin: 0 auto; align-items: center; z-index: 50; }
-.toolbar button { padding: 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; background: #fff; font-size: 14px; color: #333; cursor: pointer; }
-.toolbar button:active { background: #f5f5f5; }
+.toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #ffb6c1; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); display: flex; gap: 10px; max-width: 640px; margin: 0 auto; align-items: center; z-index: 50; }
+.toolbar button { padding: 12px; border: 1.5px solid #ffb6c1; border-radius: 10px; background: #fff; font-size: 14px; color: #333; cursor: pointer; }
+.toolbar button:active { background: #ffeef2; }
 .toolbar .btn-small { padding: 8px 10px; font-size: 12px; flex: 0 0 auto; color: #ff85a2; border-color: #ff85a2; }
-.toolbar .btn-text { flex: 1; color: #2d6a4f; border-color: #2d6a4f; }
+.toolbar .btn-text { flex: 1; color: #d6336c; border-color: #d6336c; }
 </style>
 </head>
 <body>
@@ -120,39 +119,39 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #8c1b3d; marg
         <input type="email" id="loginEmail" placeholder="邮箱">
         <input type="password" id="loginPassword" placeholder="密码">
         <button class="btn-auth" id="loginBtn">登录</button>
-        <div class="auth-loading" id="loginLoading">登录�?..</div>
+        <div class="auth-loading" id="loginLoading">🎀 登录中...</div>
       </div>
       <div id="registerForm" class="auth-form">
         <div class="auth-error" id="registerError"></div>
-        <div class="auth-success" id="registerSuccess">�?注册成功！请在登录页登录</div>
+        <div class="auth-success" id="registerSuccess">✅ 注册成功！请在登录页登录</div>
         <input type="email" id="regEmail" placeholder="邮箱">
-        <input type="password" id="regPassword" placeholder="密码（至�?位）">
+        <input type="password" id="regPassword" placeholder="密码（至少6位）">
         <button class="btn-auth" id="registerBtn">注册</button>
-        <div class="auth-loading" id="registerLoading">注册�?..</div>
+        <div class="auth-loading" id="registerLoading">🎀 注册中...</div>
       </div>
     </div>
   </div>
 </div>
 
 <div id="appPage" class="page">
-  <div class="user-bar"><span class="user-email" id="userEmail"></span><button class="btn-logout" id="logoutBtn">退�?/button></div>
+  <div class="user-bar"><span class="user-email" id="userEmail"></span><button class="btn-logout" id="logoutBtn">退出</button></div>
   <div class="form-card" style="margin-top:12px">
     <div class="form-row">
       <div class="form-group"><label>📅 日期</label><input type="date" id="inputDate"></div>
-      <div class="form-group"><label>💰 价钱（元�?/label><input type="number" id="inputPrice" placeholder="这单多少�? min="0" step="0.01"></div>
+      <div class="form-group"><label>💰 价钱（元）</label><input type="number" id="inputPrice" placeholder="这单多少钱" min="0" step="0.01"></div>
     </div>
-    <div class="form-row"><div class="form-group"><label>📝 备注（可选）</label><input type="text" id="inputNote" placeholder="比如：张三、婚礼跟�?.."></div></div>
-    <button class="btn-submit" id="btnAdd">�?记一�?/button>
+    <div class="form-row"><div class="form-group"><label>📝 备注（可选）</label><input type="text" id="inputNote" placeholder="比如：张三、婚礼跟拍..."></div></div>
+    <button class="btn-submit" id="btnAdd">➕ 记一单</button>
   </div>
   <button class="btn-cost-toggle" id="costToggle">💰 成本</button>
   <div class="cost-panel" id="costPanel">
-    <div class="cost-header"><span>总成�?/span><span><button class="cost-btn-clear" id="clearCostsBtn">清空</button> <span class="cost-total-amount" id="costTotal">0.00</span> �?/span></div>
+    <div class="cost-header"><span>总成本</span><span><button class="cost-btn-clear" id="clearCostsBtn">清空</button> <span class="cost-total-amount" id="costTotal">0.00</span> 元</span></div>
     <div class="cost-list" id="costList"></div>
-    <button class="cost-add-row" id="addCostBtn">�?添加一�?/button>
+    <button class="cost-add-row" id="addCostBtn">➕ 添加一项</button>
   </div>
   <div class="sync-bar" id="syncBar">☁️ 数据已同步到云端</div>
   <div class="stats-bar">
-    <div class="stat-item"><div class="stat-label">总单�?/div><div class="stat-value" id="totalCount">0</div></div>
+    <div class="stat-item"><div class="stat-label">总单数</div><div class="stat-value" id="totalCount">0</div></div>
     <div class="stat-item"><div class="stat-label">总金额（元）</div><div class="stat-value" id="grandTotal">0.00</div></div>
   </div>
   <div class="list-header"><h2>📋 每单明细</h2></div>
@@ -161,16 +160,16 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #8c1b3d; marg
 
 <div class="import-modal" id="importModal">
   <div class="modal-box">
-    <h3>📥 批量导入 <button class="close-btn" id="closeImportBtn">�?/button></h3>
-    <div class="import-hint">支持格式（每行一条）�?br>📌 <code>2026/03/17-�?�?金额�?0.</code><br>📌 <code>2026/03~05-�?�?金额�?0.</code><br>📌 <code>2026-01-01 100 张三</code></div>
-    <textarea id="importText" rows="6" style="width:100%;padding:10px 12px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:16px;font-family:inherit;background:#fafafa;resize:vertical;min-height:80px" placeholder="把旧账本粘贴到这�?.."></textarea>
-    <div class="import-actions"><button class="btn-submit-sm" id="doImportBtn">🔍 识别并导�?/button><button class="btn-secondary" id="cancelImportBtn">取消</button></div>
+    <h3>📥 批量导入 <button class="close-btn" id="closeImportBtn">✕</button></h3>
+    <div class="import-hint">支持格式（每行一条）：<br>📌 <code>2026/03/17-第1单-金额：50.</code><br>📌 <code>2026/03~05-第2单-金额：50.</code><br>📌 <code>2026-01-01 100 张三</code></div>
+    <textarea id="importText" rows="6" style="width:100%;padding:10px 12px;border:1.5px solid #ffb6c1;border-radius:10px;font-size:16px;font-family:inherit;background:#fff5f7;resize:vertical;min-height:80px" placeholder="把旧账本粘贴到这里..."></textarea>
+    <div class="import-actions"><button class="btn-submit-sm" id="doImportBtn">🔍 识别并导入</button><button class="btn-secondary" id="cancelImportBtn">取消</button></div>
   </div>
 </div>
 
 <div class="modal-overlay" id="textModal">
   <div class="modal-content">
-    <div class="modal-header"><h3>📄 账本文本形式</h3><button class="modal-close" id="closeTextBtn">�?/button></div>
+    <div class="modal-header"><h3>📄 账本文本形式</h3><button class="modal-close" id="closeTextBtn">✕</button></div>
     <div class="text-view" id="textViewContent"></div>
   </div>
 </div>
@@ -187,13 +186,245 @@ var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 var REST = SB_URL + '/rest/v1';
 var AUTH = SB_URL + '/auth/v1';
 
-var user = null, token = null, records = [], costs = [], costOpen = false, costExpand = false;
+var user = null, token = null, records = [], costs = [], costOpen = false, costExpand = false, costTimers = {}, showAll = false;
 
 function $(id) { return document.getElementById(id); }
 function saveLocal(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 function loadLocal(k) { try { var d = JSON.parse(localStorage.getItem(k)); if (d) return d; } catch (e) {} return null; }
 function apiHeaders() { var h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' }; if (token) h['Authorization'] = 'Bearer ' + token; return h; }
+function setSync(t) { var el = $('syncBar'); if (el) el.textContent = t || '☁️ 数据已同步到云端'; }
+function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function showPage(id) { document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); }); var el = $(id); if (el) el.classList.add('active'); var tb = $('toolbar'); if (tb) tb.style.display = id === 'appPage' ? 'flex' : 'none'; }
 
+// 所有事件绑定在 DOMContentLoaded 内
+document.addEventListener('DOMContentLoaded', function() {
+  // 默认日期
+  var today = new Date().toISOString().slice(0, 10);
+  var inputDate = $('inputDate');
+  if (inputDate) inputDate.value = today;
+
+  // 登录切换
+  var tabLogin = $('tabLogin');
+  var tabRegister = $('tabRegister');
+  if (tabLogin) tabLogin.onclick = function() {
+    document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
+    this.classList.add('active');
+    var lf = $('loginForm'); if (lf) lf.classList.add('active');
+    document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); });
+    var rs = $('registerSuccess'); if (rs) rs.classList.remove('show');
+  };
+  if (tabRegister) tabRegister.onclick = function() {
+    document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
+    this.classList.add('active');
+    var rf = $('registerForm'); if (rf) rf.classList.add('active');
+    document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); });
+    var rs = $('registerSuccess'); if (rs) rs.classList.remove('show');
+  };
+
+  // 登录
+  var loginBtn = $('loginBtn');
+  if (loginBtn) loginBtn.onclick = async function() {
+    var email = $('loginEmail').value.trim();
+    var password = $('loginPassword').value;
+    if (!email || !password) { var le = $('loginError'); if (le) { le.textContent = '请输入邮箱和密码'; le.classList.add('show'); } return; }
+    this.disabled = true;
+    var ll = $('loginLoading'); if (ll) ll.style.display = 'block';
+    var le = $('loginError'); if (le) le.classList.remove('show');
+    try {
+      var data = await api('POST', AUTH + '/token?grant_type=password', { email: email, password: password });
+      user = data.user; token = data.access_token;
+      localStorage.setItem('t', data.access_token); localStorage.setItem('rt', data.refresh_token); localStorage.setItem('u', JSON.stringify(data.user));
+      enterApp();
+    } catch (e) {
+      if (le) { le.textContent = e.message.indexOf('Invalid') >= 0 ? '邮箱或密码错误' : e.message; le.classList.add('show'); }
+    }
+    this.disabled = false;
+    if (ll) ll.style.display = 'none';
+  };
+
+  // 注册
+  var registerBtn = $('registerBtn');
+  if (registerBtn) registerBtn.onclick = async function() {
+    var email = $('regEmail').value.trim();
+    var password = $('regPassword').value;
+    if (!email || !password) { var re = $('registerError'); if (re) { re.textContent = '请输入邮箱和密码'; re.classList.add('show'); } return; }
+    if (password.length < 6) { var re = $('registerError'); if (re) { re.textContent = '密码至少6位'; re.classList.add('show'); } return; }
+    this.disabled = true;
+    var rl = $('registerLoading'); if (rl) rl.style.display = 'block';
+    var re = $('registerError'); if (re) re.classList.remove('show');
+    try {
+      await api('POST', AUTH + '/signup', { email: email, password: password });
+      var rs = $('registerSuccess'); if (rs) rs.classList.add('show');
+      this.textContent = '注册成功 ✓';
+    } catch (e) { if (re) { re.textContent = e.message; re.classList.add('show'); } }
+    this.disabled = false;
+    if (rl) rl.style.display = 'none';
+  };
+
+  // 退出
+  var logoutBtn = $('logoutBtn');
+  if (logoutBtn) logoutBtn.onclick = async function() {
+    try { await api('POST', AUTH + '/logout'); } catch (e) {}
+    user = null; token = null; localStorage.removeItem('t'); localStorage.removeItem('rt'); localStorage.removeItem('u');
+    showPage('authPage');
+  };
+
+  // 记一单
+  var btnAdd = $('btnAdd');
+  if (btnAdd) btnAdd.onclick = async function() {
+    var date = $('inputDate').value;
+    var price = $('inputPrice').value;
+    var note = $('inputNote').value.trim();
+    if (!date) { alert('请选择日期'); return; }
+    if (!price || parseFloat(price) <= 0) { alert('请输入有效的价钱'); return; }
+    var result = await api('POST', REST + '/records', { user_id: user.id, date: date, price: parseFloat(price), note: note });
+    if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
+    renderRecords();
+    $('inputPrice').value = '';
+    $('inputNote').value = '';
+    setTimeout(function() { var g = $('recordContainer').querySelector('.date-group'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+  };
+
+  // 回车提交
+  var inputPrice = $('inputPrice');
+  var inputNote = $('inputNote');
+  if (inputPrice) inputPrice.onkeydown = function(e) { if (e.key === 'Enter') { var ba = $('btnAdd'); if (ba) ba.click(); } };
+  if (inputNote) inputNote.onkeydown = function(e) { if (e.key === 'Enter') { var ba = $('btnAdd'); if (ba) ba.click(); } };
+
+  // 成本切换
+  var costToggle = $('costToggle');
+  if (costToggle) costToggle.onclick = function() {
+    costOpen = !costOpen;
+    var cp = $('costPanel'); if (cp) cp.classList.toggle('open', costOpen);
+    this.classList.toggle('open', costOpen);
+    this.textContent = costOpen ? '💰 收起成本' : '💰 成本';
+  };
+
+  // 添加成本
+  var addCostBtn = $('addCostBtn');
+  if (addCostBtn) addCostBtn.onclick = async function() {
+    var tid = 'temp_' + Date.now();
+    costs.push({ id: tid, description: '', amount: 0 });
+    renderCosts();
+    setTimeout(function() { var items = document.querySelectorAll('.cost-item'); if (items.length) items[items.length - 1].querySelector('.cost-input-desc').focus(); }, 100);
+    try {
+      var result = await api('POST', REST + '/costs', { user_id: user.id, description: '', amount: 0 });
+      var rid = null; if (Array.isArray(result) && result.length > 0) rid = result[0].id; else if (result && result.id) rid = result.id;
+      if (rid) { for (var i = 0; i < costs.length; i++) { if (costs[i].id === tid) { costs[i].id = rid; break; } } renderCosts(); saveLocal('costs', costs); }
+    } catch (e) {}
+  };
+
+  // 清空成本
+  var clearCostsBtn = $('clearCostsBtn');
+  if (clearCostsBtn) clearCostsBtn.onclick = async function() {
+    if (!confirm('确定清空所有成本项？')) return;
+    for (var i = 0; i < costs.length; i++) await api('DELETE', REST + '/costs?id=eq.' + costs[i].id);
+    costs = []; renderCosts(); saveLocal('costs', costs);
+  };
+
+  // 导入
+  var openImportBtn = $('openImportBtn');
+  if (openImportBtn) openImportBtn.onclick = function() { $('importModal').classList.add('open'); $('importText').value = ''; };
+  var closeImportBtn = $('closeImportBtn');
+  if (closeImportBtn) closeImportBtn.onclick = function() { $('importModal').classList.remove('open'); };
+  var cancelImportBtn = $('cancelImportBtn');
+  if (cancelImportBtn) cancelImportBtn.onclick = function() { $('importModal').classList.remove('open'); };
+
+  var doImportBtn = $('doImportBtn');
+  if (doImportBtn) doImportBtn.onclick = async function() {
+    var text = $('importText').value; if (!text.trim()) { alert('请粘贴数据'); return; }
+    var lines = text.split('\n'), items = [];
+    for (var li = 0; li < lines.length; li++) {
+      var line = lines[li].trim(); if (!line) continue;
+      if (/^(日期|date|单价|小计|合计|━|═|=|#)/i.test(line)) continue;
+      var date = '', price = 0, note = '', m;
+      m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*$/);
+      if (m) { date = m[1]; price = parseFloat(m[2]); }
+      else {
+        m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*[-—](.+)$/);
+        if (m) { date = m[1]; price = parseFloat(m[2]); note = m[3].trim(); }
+        else {
+          m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
+          if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = m[5].trim(); }
+          else {
+            m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
+            if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = (m[5]||'').trim(); }
+          }
+        }
+      }
+      if (date && price > 0) {
+        if (date.indexOf('~') !== -1) { var ps = date.split('~'); date = ps[0].replace(/[/.]/g, '-'); if (date.match(/^\d{4}-\d{1,2}$/)) date += '-01'; }
+        else { date = date.replace(/[/.]/g, '-'); if (!date.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) { var dm = date.match(/^(\d{4}-\d{1,2})$/); if (dm) date = dm[1] + '-01'; } }
+        items.push({ date: date, price: price, note: note });
+      }
+    }
+    if (!items.length) { alert('未能识别出有效数据。'); return; }
+    if (!confirm('识别到 ' + items.length + ' 条记录，确认导入？')) return;
+    setSync('⏳ 正在导入 ' + items.length + ' 条...');
+    var ok = 0, err = 0;
+    for (var i = 0; i < items.length; i++) {
+      try {
+        var item = items[i], result = await api('POST', REST + '/records', { user_id: user.id, date: item.date, price: item.price, note: item.note || '' });
+        if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
+        ok++;
+      } catch (e) { err++; }
+    }
+    records.sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
+    renderRecords(); $('importModal').classList.remove('open');
+    setSync('☁️ 导入完成：成功 ' + ok + ' 条' + (err > 0 ? '，失败 ' + err + ' 条' : ''));
+    if (ok > 0) alert('✅ 成功导入 ' + ok + ' 条记录！' + (err > 0 ? '\n失败 ' + err + ' 条' : ''));
+  };
+
+  // 文本查看
+  var openTextBtn = $('openTextBtn');
+  if (openTextBtn) openTextBtn.onclick = function() {
+    var txt = '=== 纯纯拍照记账 ===\n';
+    if (costs.length) {
+      txt += '\n--- 成本 ---\n'; var ct = 0;
+      costs.forEach(function(c) { var a = parseFloat(c.amount) || 0; ct += a; txt += '  ' + (c.description || '(未命名)') + '：' + a.toFixed(2) + '元\n'; });
+      txt += '  成本合计：' + ct.toFixed(2) + '元\n';
+    }
+    var gt = 0; records.forEach(function(r) { gt += parseFloat(r.price) || 0; });
+    txt += '\n总单数：' + records.length + '\n总金额：' + gt.toFixed(2) + ' 元\n\n';
+    var sorted = records.slice().sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
+    var groups = {}; sorted.forEach(function(r) { var d = r.date || '未知'; if (!groups[d]) groups[d] = []; groups[d].push(r); });
+    var dl = Object.keys(groups).sort(function(a, b) { return dateKey(a) > dateKey(b) ? 1 : -1; });
+    var sn = 0;
+    dl.forEach(function(date) {
+      var items = groups[date], dt = 0; items.forEach(function(r) { dt += parseFloat(r.price) || 0; });
+      txt += '📅 ' + date + '  —  ' + dt.toFixed(2) + '元\n';
+      items.forEach(function(r) { sn++; txt += '  第' + sn + '单  ' + (parseFloat(r.price) || 0).toFixed(2) + '元' + (r.note ? '  📌 ' + r.note : '') + '\n'; });
+    });
+    $('textViewContent').textContent = txt; $('textModal').classList.add('open');
+  };
+
+  var closeTextBtn = $('closeTextBtn');
+  if (closeTextBtn) closeTextBtn.onclick = function() { $('textModal').classList.remove('open'); };
+  var textModal = $('textModal');
+  if (textModal) textModal.onclick = function(e) { if (e.target === this) $('textModal').classList.remove('open'); };
+
+  // 成本事件委托
+  var costList = $('costList');
+  if (costList) {
+    costList.oninput = function(e) {
+      var target = e.target;
+      if (target && target.dataset && target.dataset.cid) costSave(target);
+    };
+    costList.onclick = function(e) {
+      var target = e.target;
+      if (target && target.dataset && target.dataset.cid && target.className === 'cost-btn-del') delCost(target.dataset.cid);
+    };
+  }
+
+  // 检查登录状态
+  var t = localStorage.getItem('t');
+  var u = localStorage.getItem('u');
+  if (t && u) { token = t; try { user = JSON.parse(u); enterApp(); } catch(e) {} }
+});
+
+// ====== 全局函数 ======
 async function api(method, url, body) {
   var opt = { method: method, headers: apiHeaders() };
   if (body) { opt.body = JSON.stringify(body); if (method === 'POST') opt.headers['Prefer'] = 'return=representation'; }
@@ -206,13 +437,15 @@ async function api(method, url, body) {
         var r = await fetch(AUTH + '/token?grant_type=refresh_token', { method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: rt }) });
         var d = await r.json();
         if (d.access_token) { token = d.access_token; localStorage.setItem('t', d.access_token); if (d.refresh_token) localStorage.setItem('rt', d.refresh_token); opt.headers['Authorization'] = 'Bearer ' + token; res = await fetch(url, opt); if (res.status === 204) return null; }
-        else { doLogout(); throw new Error('登录已过�?); }
-      } catch (e) { doLogout(); throw new Error('登录已过�?); }
-    } else { doLogout(); throw new Error('登录已过�?); }
+        else { doLogout2(); throw new Error('登录已过期'); }
+      } catch (e) { doLogout2(); throw new Error('登录已过期'); }
+    } else { doLogout2(); throw new Error('登录已过期'); }
   }
   try { var data = await res.json(); if (!res.ok) throw new Error(data.message || data.error_description || data.msg || '请求失败'); return data; }
   catch (e) { if (res.ok) return null; throw e; }
 }
+
+function doLogout2() { user = null; token = null; localStorage.removeItem('t'); localStorage.removeItem('rt'); localStorage.removeItem('u'); showPage('authPage'); }
 
 function dateKey(d) {
   if (!d) return '9';
@@ -223,241 +456,10 @@ function dateKey(d) {
   return d;
 }
 
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  $(id).classList.add('active');
-  $('toolbar').style.display = id === 'appPage' ? 'flex' : 'none';
-}
-
-function setSync(t) { $('syncBar').textContent = t || '☁️ 数据已同步到云端'; }
-function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-// ====== 所有初始化�?DOM 加载完成�?======
-document.addEventListener('DOMContentLoaded', function() {
-
-  // 设置日期
-  $('inputDate').value = new Date().toISOString().slice(0, 10);
-
-  // ====== 登录切换 ======
-  $('tabLogin').addEventListener('click', function() {
-    document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
-    this.classList.add('active');
-    $('loginForm').classList.add('active');
-    document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); });
-    $('registerSuccess').classList.remove('show');
-  });
-
-  $('tabRegister').addEventListener('click', function() {
-    document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
-    this.classList.add('active');
-    $('registerForm').classList.add('active');
-    document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); });
-    $('registerSuccess').classList.remove('show');
-  });
-
-  // ====== 登录 ======
-  $('loginBtn').addEventListener('click', async function() {
-    var email = $('loginEmail').value.trim(), password = $('loginPassword').value;
-    if (!email || !password) { $('loginError').textContent = '请输入邮箱和密码'; $('loginError').classList.add('show'); return; }
-    this.disabled = true; $('loginLoading').style.display = 'block'; $('loginError').classList.remove('show');
-    try {
-      var data = await api('POST', AUTH + '/token?grant_type=password', { email: email, password: password });
-      user = data.user; token = data.access_token;
-      localStorage.setItem('t', data.access_token); localStorage.setItem('rt', data.refresh_token); localStorage.setItem('u', JSON.stringify(data.user));
-      enterApp();
-    } catch (e) { $('loginError').textContent = e.message.includes('Invalid') ? '邮箱或密码错�? : e.message; $('loginError').classList.add('show'); }
-    this.disabled = false; $('loginLoading').style.display = 'none';
-  });
-
-  $('registerBtn').addEventListener('click', async function() {
-    var email = $('regEmail').value.trim(), password = $('regPassword').value;
-    if (!email || !password) { $('registerError').textContent = '请输入邮箱和密码'; $('registerError').classList.add('show'); return; }
-    if (password.length < 6) { $('registerError').textContent = '密码至少6�?; $('registerError').classList.add('show'); return; }
-    this.disabled = true; $('registerLoading').style.display = 'block'; $('registerError').classList.remove('show');
-    try { await api('POST', AUTH + '/signup', { email: email, password: password }); $('registerSuccess').classList.add('show'); this.textContent = '注册成功 �?; }
-    catch (e) { $('registerError').textContent = e.message; $('registerError').classList.add('show'); }
-    this.disabled = false; $('registerLoading').style.display = 'none';
-  });
-
-  $('logoutBtn').addEventListener('click', async function() {
-    try { await api('POST', AUTH + '/logout'); } catch (e) {}
-    user = null; token = null; localStorage.removeItem('t'); localStorage.removeItem('rt'); localStorage.removeItem('u');
-    showPage('authPage');
-  });
-
-  // ====== 新增记录 ======
-  $('btnAdd').addEventListener('click', async function() {
-    var date = $('inputDate').value, price = $('inputPrice').value, note = $('inputNote').value.trim();
-    if (!date) { alert('请选择日期'); return; }
-    if (!price || parseFloat(price) <= 0) { alert('请输入有效的价钱'); return; }
-    var result = await api('POST', REST + '/records', { user_id: user.id, date: date, price: parseFloat(price), note: note });
-    if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
-    renderRecords();
-    $('inputPrice').value = ''; $('inputNote').value = '';
-    setTimeout(function() { var g = $('recordContainer').querySelector('.date-group'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
-  });
-
-  // 回车快捷提交
-  $('inputPrice').addEventListener('keydown', function(e) { if (e.key === 'Enter') $('btnAdd').click(); });
-  $('inputNote').addEventListener('keydown', function(e) { if (e.key === 'Enter') $('btnAdd').click(); });
-
-  // ====== 成本 ======
-  $('costToggle').addEventListener('click', function() {
-    costOpen = !costOpen;
-    $('costPanel').classList.toggle('open', costOpen);
-    this.classList.toggle('open', costOpen);
-    this.textContent = costOpen ? '💰 收起成本' : '💰 成本';
-  });
-
-  $('addCostBtn').addEventListener('click', async function() {
-    var tid = 'temp_' + Date.now(); costs.push({ id: tid, description: '', amount: 0 }); renderCosts();
-    setTimeout(function() { var items = document.querySelectorAll('.cost-item'); if (items.length) items[items.length - 1].querySelector('.cost-input-desc').focus(); }, 100);
-    try {
-      var result = await api('POST', REST + '/costs', { user_id: user.id, description: '', amount: 0 });
-      var rid = null; if (Array.isArray(result) && result.length > 0) rid = result[0].id; else if (result && result.id) rid = result.id;
-      if (rid) { for (var i = 0; i < costs.length; i++) { if (costs[i].id === tid) { costs[i].id = rid; break; } } renderCosts(); saveLocal('costs', costs); }
-    } catch (e) {}
-  });
-
-  $('clearCostsBtn').addEventListener('click', async function() {
-    if (!confirm('确定清空所有成本项�?)) return;
-    for (var i = 0; i < costs.length; i++) await api('DELETE', REST + '/costs?id=eq.' + costs[i].id);
-    costs = []; renderCosts(); saveLocal('costs', costs);
-  });
-
-  // ====== 导入 ======
-  $('openImportBtn').addEventListener('click', function() { $('importModal').classList.add('open'); $('importText').value = ''; });
-  $('closeImportBtn').addEventListener('click', function() { $('importModal').classList.remove('open'); });
-  $('cancelImportBtn').addEventListener('click', function() { $('importModal').classList.remove('open'); });
-
-  $('doImportBtn').addEventListener('click', async function() {
-    var text = $('importText').value; if (!text.trim()) { alert('请粘贴数�?); return; }
-    var lines = text.split('\n'), items = [];
-    for (var li = 0; li < lines.length; li++) {
-      var line = lines[li].trim(); if (!line) continue;
-      if (/^(日期|date|单价|小计|合计|━━|===|#)/i.test(line)) continue;
-      if (/^[─═━=]+$/.test(line)) continue;
-      var date = '', price = 0, note = '', m;
-      m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[�?]\s*(\d+(?:\.\d+)?)\s*\.?\s*$/);
-      if (m) { date = m[1]; price = parseFloat(m[2]); }
-      else {
-        m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[�?]\s*(\d+(?:\.\d+)?)\s*\.?\s*[-—](.+)$/);
-        if (m) { date = m[1]; price = parseFloat(m[2]); note = m[3].trim(); }
-        else {
-          m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
-          if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = m[5].trim(); }
-          else {
-            m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
-            if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = (m[5]||'').trim(); }
-          }
-        }
-      }
-      if (date && price > 0) {
-        if (date.indexOf('~') !== -1) { var ps = date.split('~'); date = ps[0].replace(/[/\.]/g, '-'); if (date.match(/^\d{4}-\d{1,2}$/)) date += '-01'; }
-        else { date = date.replace(/[/\.]/g, '-'); if (!date.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) { var dm = date.match(/^(\d{4}-\d{1,2})$/); if (dm) date = dm[1] + '-01'; } }
-        items.push({ date: date, price: price, note: note });
-      }
-    }
-    if (!items.length) { alert('未能识别出有效数据�?); return; }
-    if (!confirm('识别�?' + items.length + ' 条记录，确认导入�?)) return;
-    setSync('�?正在导入 ' + items.length + ' �?..');
-    var ok = 0, err = 0;
-    for (var i = 0; i < items.length; i++) {
-      try {
-        var item = items[i], result = await api('POST', REST + '/records', { user_id: user.id, date: item.date, price: item.price, note: item.note || '' });
-        if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
-        ok++;
-      } catch (e) { err++; if (err <= 3) console.log('导入失败:', item.date, item.price, e.message); }
-    }
-    records.sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
-    renderRecords(); $('importModal').classList.remove('open');
-    setSync('☁️ 导入完成：成�?' + ok + ' �? + (err > 0 ? '，失�?' + err + ' �? : ''));
-    if (ok > 0) alert('�?成功导入 ' + ok + ' 条记录！' + (err > 0 ? '\n失败 ' + err + ' 条（详情见控制台�? : ''));
-  });
-
-  // ====== 文本查看 ======
-  $('openTextBtn').addEventListener('click', function() {
-    var txt = '=== 纯纯拍照记账 ===\n';
-    if (costs.length) {
-      txt += '\n--- 成本 ---\n'; var ct = 0;
-      costs.forEach(function(c) { var a = parseFloat(c.amount) || 0; ct += a; txt += '  ' + (c.description || '(未命�?') + '�? + a.toFixed(2) + '元\n'; });
-      txt += '  成本合计�? + ct.toFixed(2) + '元\n';
-    }
-    var gt = 0; records.forEach(function(r) { gt += parseFloat(r.price) || 0; });
-    txt += '\n总单数：' + records.length + '\n总金额：' + gt.toFixed(2) + ' 元\n\n';
-    var sorted = records.slice().sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
-    var groups = {}; sorted.forEach(function(r) { var d = r.date || '未知'; if (!groups[d]) groups[d] = []; groups[d].push(r); });
-    var dl = Object.keys(groups).sort(function(a, b) { return dateKey(a) > dateKey(b) ? 1 : -1; });
-    var sn = 0;
-    dl.forEach(function(date) {
-      var items = groups[date], dt = 0; items.forEach(function(r) { dt += parseFloat(r.price) || 0; });
-      txt += '📅 ' + date + '  �? ' + dt.toFixed(2) + '元\n';
-      items.forEach(function(r) { sn++; txt += '  �? + sn + '�? ' + (parseFloat(r.price) || 0).toFixed(2) + '�? + (r.note ? '  📌 ' + r.note : '') + '\n'; });
-    });
-    $('textViewContent').textContent = txt; $('textModal').classList.add('open');
-  });
-
-  $('closeTextBtn').addEventListener('click', function() { $('textModal').classList.remove('open'); });
-  $('textModal').addEventListener('click', function(e) { if (e.target === this) $('textModal').classList.remove('open'); });
-
-  // ====== 成本事件委托（兼�?iOS�?======
-  $('costList').addEventListener('input', function(e) {
-    var target = e.target;
-    if (target.dataset && target.dataset.cid) {
-      costSave(target);
-    }
-  });
-  $('costList').addEventListener('click', function(e) {
-    var target = e.target;
-    if (target.dataset && target.dataset.cid && target.className === 'cost-btn-del') {
-      delCost(target.dataset.cid);
-    }
-  });
-
-  // ====== 检查登录状�?======
-  var t = localStorage.getItem('t'), u = localStorage.getItem('u');
-  if (t && u) { token = t; user = JSON.parse(u); enterApp(); }
-});
-
-// ====== 全局函数 ======
-var showAll = false;
-
-function renderRecords() {
-  var el = $('recordContainer');
-  if (!records.length) { el.innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>'; $('totalCount').textContent = '0'; $('grandTotal').textContent = '0.00'; return; }
-  var sorted = records.slice().sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
-  var groups = {};
-  sorted.forEach(function(r, i) { var d = r.date || '未知'; if (!groups[d]) groups[d] = []; groups[d].push({ id: r.id, date: r.date, price: r.price, note: r.note, seq: i + 1 }); });
-  var dl = Object.keys(groups).sort(function(a, b) { return dateKey(a) < dateKey(b) ? 1 : -1; });
-  var gt = 0, html = '', sc = showAll ? dl.length : Math.min(2, dl.length);
-  for (var di = 0; di < dl.length; di++) {
-    var date = dl[di], items = groups[date], dt = 0;
-    items.forEach(function(r) { dt += parseFloat(r.price) || 0; gt += parseFloat(r.price) || 0; });
-    var sty = di < sc ? '' : ' style="display:none"';
-    html += '<div class="date-group"' + sty + '><div class="date-header"><span>📅 ' + date + '</span><span class="date-total">' + dt.toFixed(2) + ' �?/span></div><div class="date-records">';
-    items.forEach(function(r) {
-      var p = parseFloat(r.price) || 0, note = r.note ? '<span class="record-note-text">📌 ' + esc(r.note) + '</span>' : '';
-      html += '<div class="record-item"><div><span class="record-num">�?' + r.seq + ' �?/span>' + note + '</div><div><span class="record-price-text">' + p.toFixed(2) + ' �?/span><button class="btn-del" onclick="delRec(\'' + r.id + '\')">�?/button></div></div>';
-    });
-    html += '</div></div>';
-  }
-  if (records.length > 0) html += '<div style="text-align:center;margin:12px 16px 0"><button onclick="if(confirm(\'确定清空全部记录？\'))clearAllRecs()" style="font-size:13px;padding:6px 16px;border:1px solid #e63946;border-radius:8px;background:transparent;color:#e63946;cursor:pointer">清空全部记录</button></div>';
-  if (dl.length > 2) html += '<div style="text-align:center;margin:10px 16px 0"><button onclick="toggleAll()" style="padding:8px 20px;font-size:14px;border-radius:10px;border:1.5px solid #ff85a2;color:#ff85a2;background:#fff;cursor:pointer">' + (showAll ? '�?收起' : '�?展开全部明细') + '</button></div>';
-  el.innerHTML = html; $('totalCount').textContent = records.length; $('grandTotal').textContent = gt.toFixed(2); saveLocal('recs', records);
-}
-
-function toggleAll() { showAll = !showAll; renderRecords(); }
-
-async function delRec(id) { if (!confirm('确定删除�?)) return; await api('DELETE', REST + '/records?id=eq.' + id); records = records.filter(function(r) { return r.id !== id; }); renderRecords(); }
-
-async function clearAllRecs() { for (var i = 0; i < records.length; i++) await api('DELETE', REST + '/records?id=eq.' + records[i].id); records = []; renderRecords(); }
-
-async function enterApp() { showPage('appPage'); $('userEmail').textContent = user.email; await loadData(); }
+async function enterApp() { showPage('appPage'); var ue = $('userEmail'); if (ue) ue.textContent = user.email; await loadData(); }
 
 async function loadData() {
-  setSync('�?同步�?..');
+  setSync('⏳ 同步中...');
   var lr = loadLocal('recs'); if (lr) { records = lr; renderRecords(); }
   var lc = loadLocal('costs'); if (lc) { costs = lc; renderCosts(); }
   try {
@@ -477,35 +479,60 @@ async function loadData() {
   } catch (e) { setSync('⚠️ ' + e.message); }
 }
 
-function renderCosts() {
-  var el = $('costList'), total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
-  if (!costs.length) { el.innerHTML = ''; return; }
-  var st = costs.length > 2, html = '';
-  costs.forEach(function(c) { var a = parseFloat(c.amount) || 0, d = esc(c.description || ''); html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount"><button class="cost-btn-del" data-cid="' + c.id + '">�?/button></div>'; });
-  el.innerHTML = html; saveLocal('costs', costs);
-  if (st) { el.classList.add('collapsed'); if (costExpand) el.classList.remove('collapsed'); var tb = document.createElement('button'); tb.className = 'cost-toggle-btn'; tb.textContent = costExpand ? '�?收起' : '�?展开全部（共 ' + costs.length + ' 项）'; tb.onclick = function() { costExpand = !costExpand; renderCosts(); }; el.appendChild(tb); }
-  else { el.classList.remove('collapsed'); costExpand = false; }
+function renderRecords() {
+  var el = $('recordContainer');
+  if (!el) return;
+  if (!records.length) { el.innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>'; $('totalCount').textContent = '0'; $('grandTotal').textContent = '0.00'; return; }
+  var sorted = records.slice().sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
+  var groups = {};
+  sorted.forEach(function(r, i) { var d = r.date || '未知'; if (!groups[d]) groups[d] = []; groups[d].push({ id: r.id, date: r.date, price: r.price, note: r.note, seq: i + 1 }); });
+  var dl = Object.keys(groups).sort(function(a, b) { return dateKey(a) < dateKey(b) ? 1 : -1; });
+  var gt = 0, html = '', sc = showAll ? dl.length : Math.min(2, dl.length);
+  for (var di = 0; di < dl.length; di++) {
+    var date = dl[di], items = groups[date], dt = 0;
+    items.forEach(function(r) { dt += parseFloat(r.price) || 0; gt += parseFloat(r.price) || 0; });
+    var sty = di < sc ? '' : ' style="display:none"';
+    html += '<div class="date-group"' + sty + '><div class="date-header"><span>📅 ' + date + '</span><span class="date-total">' + dt.toFixed(2) + ' 元</span></div><div class="date-records">';
+    items.forEach(function(r) { var p = parseFloat(r.price) || 0, note = r.note ? '<span class="record-note-text">📌 ' + esc(r.note) + '</span>' : ''; html += '<div class="record-item"><div><span class="record-num">第 ' + r.seq + ' 单</span>' + note + '</div><div><span class="record-price-text">' + p.toFixed(2) + ' 元</span><button class="btn-del" onclick="delRec(\'' + r.id + '\')">✕</button></div></div>'; });
+    html += '</div></div>';
+  }
+  if (records.length > 0) html += '<div style="text-align:center;margin:12px 16px 0"><button onclick="if(confirm(\'确定清空全部记录？\'))clearAllRecs()" style="font-size:13px;padding:6px 16px;border:1px solid #d6336c;border-radius:8px;background:transparent;color:#d6336c;cursor:pointer">清空全部记录</button></div>';
+  if (dl.length > 2) html += '<div style="text-align:center;margin:10px 16px 0"><button onclick="toggleAll()" style="padding:8px 20px;font-size:14px;border-radius:10px;border:1.5px solid #ff85a2;color:#ff85a2;background:#fff;cursor:pointer">' + (showAll ? '▲ 收起' : '▼ 展开全部明细') + '</button></div>';
+  el.innerHTML = html; $('totalCount').textContent = records.length; $('grandTotal').textContent = gt.toFixed(2); saveLocal('recs', records);
 }
 
-var costTimers = {};
+function toggleAll() { showAll = !showAll; renderRecords(); }
+
+async function delRec(id) { if (!confirm('确定删除？')) return; await api('DELETE', REST + '/records?id=eq.' + id); records = records.filter(function(r) { return r.id !== id; }); renderRecords(); }
+
+async function clearAllRecs() { for (var i = 0; i < records.length; i++) await api('DELETE', REST + '/records?id=eq.' + records[i].id); records = []; renderRecords(); }
+
+function renderCosts() {
+  var el = $('costList');
+  if (!el) return;
+  var total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
+  if (!costs.length) { el.innerHTML = ''; return; }
+  var st = costs.length > 2, html = '';
+  costs.forEach(function(c) { var a = parseFloat(c.amount) || 0, d = esc(c.description || ''); html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount"><button class="cost-btn-del" data-cid="' + c.id + '">✕</button></div>'; });
+  el.innerHTML = html; saveLocal('costs', costs);
+  if (st) { el.classList.add('collapsed'); if (costExpand) el.classList.remove('collapsed'); var tb = document.createElement('button'); tb.className = 'cost-toggle-btn'; tb.textContent = costExpand ? '▲ 收起' : '▼ 展开全部（共 ' + costs.length + ' 项）'; tb.onclick = function() { costExpand = !costExpand; renderCosts(); }; el.appendChild(tb); }
+  else { el.classList.remove('collapsed'); costExpand = false; }
+}
 
 function costSave(inp) {
   var id = inp.dataset.cid, field = inp.dataset.field, cost = null;
   for (var i = 0; i < costs.length; i++) { if (costs[i].id === id) { cost = costs[i]; break; } }
   if (!cost) return;
   if (field === 'amount') cost.amount = parseFloat(inp.value) || 0; else cost.description = inp.value;
-  // 更新总成�?  var total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
-  // 存本�?  saveLocal('costs', costs);
-  // 防抖同步云端
+  var total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
+  saveLocal('costs', costs);
   if (costTimers[id]) clearTimeout(costTimers[id]);
   if (id && id.indexOf('temp_') !== 0) {
-    costTimers[id] = setTimeout(function() {
-      var ud = {}; ud[field] = cost[field]; api('PATCH', REST + '/costs?id=eq.' + id, ud).catch(function(){});
-    }, 800);
+    costTimers[id] = setTimeout(function() { var ud = {}; ud[field] = cost[field]; api('PATCH', REST + '/costs?id=eq.' + id, ud).catch(function(){}); }, 800);
   }
 }
 
-async function delCost(id) { if (!confirm('确定删除这项成本�?)) return; await api('DELETE', REST + '/costs?id=eq.' + id); costs = costs.filter(function(c) { return c.id !== id; }); renderCosts(); saveLocal('costs', costs); }
+async function delCost(id) { if (!confirm('确定删除这项成本？')) return; await api('DELETE', REST + '/costs?id=eq.' + id); costs = costs.filter(function(c) { return c.id !== id; }); renderCosts(); saveLocal('costs', costs); }
 </script>
 </body>
 </html>
