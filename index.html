@@ -37,8 +37,8 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; marg
 .user-bar .user-email { font-size: 13px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
 .user-bar .btn-logout { background: none; border: none; font-size: 13px; color: #e63946; cursor: pointer; padding: 4px 10px; border-radius: 6px; }
 .form-card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin: 0 16px 16px; }
-.form-row { display: flex; gap: 12px; margin-bottom: 12px; }
-.form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.form-row { display: flex; gap: 10px; margin-bottom: 12px; }
+.form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .form-group label { font-size: 13px; color: #666; font-weight: 500; }
 .form-group input { padding: 10px 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: #fafafa; font-family: inherit; width: 100%; }
 .form-group input:focus { outline: none; border-color: #4361ee; background: #fff; }
@@ -55,7 +55,7 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; marg
 .cost-btn-clear { background: none; border: none; font-size: 12px; color: #bbb; cursor: pointer; }
 .cost-list { display: flex; flex-direction: column; gap: 6px; }
 .cost-item { display: flex; gap: 8px; align-items: center; }
-.cost-item input { padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: #fafafa; font-family: inherit; }
+.cost-item input { padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: #fafafa; font-family: inherit; max-width: 100%; }
 .cost-item .cost-input-desc { flex: 3; width: 0; min-width: 0; }
 .cost-item .cost-input-amount { flex: 1.2; width: 0; min-width: 0; }
 .cost-item .cost-btn-del { background: none; border: none; font-size: 16px; color: #ccc; cursor: pointer; }
@@ -465,19 +465,30 @@ function renderCosts() {
   var el = $('costList'), total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
   if (!costs.length) { el.innerHTML = ''; return; }
   var st = costs.length > 2, html = '';
-  costs.forEach(function(c) { var a = parseFloat(c.amount) || 0, d = esc(c.description || ''); html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc" onblur="costSave(this)"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount" onblur="costSave(this)" oninput="costUpdTotal(this)"><button class="cost-btn-del" onclick="delCost(\'' + c.id + '\')">✕</button></div>'; });
+  costs.forEach(function(c) { var a = parseFloat(c.amount) || 0, d = esc(c.description || ''); html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc" oninput="costSave(this)"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount" oninput="costSave(this)"><button class="cost-btn-del" onclick="delCost(\'' + c.id + '\')">✕</button></div>'; });
   el.innerHTML = html; saveLocal('costs', costs);
   if (st) { el.classList.add('collapsed'); if (costExpand) el.classList.remove('collapsed'); var tb = document.createElement('button'); tb.className = 'cost-toggle-btn'; tb.textContent = costExpand ? '▲ 收起' : '▼ 展开全部（共 ' + costs.length + ' 项）'; tb.onclick = function() { costExpand = !costExpand; renderCosts(); }; el.appendChild(tb); }
   else { el.classList.remove('collapsed'); costExpand = false; }
 }
 
-function costUpdTotal(inp) { var cost = null; for (var i = 0; i < costs.length; i++) { if (costs[i].id === inp.dataset.cid) { cost = costs[i]; break; } } if (!cost) return; cost.amount = parseFloat(inp.value) || 0; var total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2); }
+var costTimers = {};
 
 function costSave(inp) {
   var id = inp.dataset.cid, field = inp.dataset.field, cost = null;
   for (var i = 0; i < costs.length; i++) { if (costs[i].id === id) { cost = costs[i]; break; } }
-  if (!cost) return; if (field === 'amount') cost.amount = parseFloat(inp.value) || 0; else cost.description = inp.value;
-  saveLocal('costs', costs); if (id && id.indexOf('temp_') !== 0) { var ud = {}; ud[field] = cost[field]; api('PATCH', REST + '/costs?id=eq.' + id, ud).catch(function(){}); }
+  if (!cost) return;
+  if (field === 'amount') cost.amount = parseFloat(inp.value) || 0; else cost.description = inp.value;
+  // 更新总成本
+  var total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
+  // 存本地
+  saveLocal('costs', costs);
+  // 防抖同步云端
+  if (costTimers[id]) clearTimeout(costTimers[id]);
+  if (id && id.indexOf('temp_') !== 0) {
+    costTimers[id] = setTimeout(function() {
+      var ud = {}; ud[field] = cost[field]; api('PATCH', REST + '/costs?id=eq.' + id, ud).catch(function(){});
+    }, 800);
+  }
 }
 
 async function delCost(id) { if (!confirm('确定删除这项成本？')) return; await api('DELETE', REST + '/costs?id=eq.' + id); costs = costs.filter(function(c) { return c.id !== id; }); renderCosts(); saveLocal('costs', costs); }
