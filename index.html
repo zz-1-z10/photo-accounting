@@ -229,7 +229,7 @@ let records = [];
 let costs = [];
 let costOpen = false;
 let costExpand = false;
-let costTimers = {};
+
 
 function $(id) { return document.getElementById(id); }
 
@@ -602,8 +602,8 @@ function renderCosts() {
     var amt = parseFloat(c.amount) || 0;
     var desc = escHtml(c.description || '');
     html += '<div class="cost-item">' +
-      '<input class="cost-input-desc" type="text" value="' + desc + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc" oninput="costEdit(this)">' +
-      '<input class="cost-input-amount" type="number" value="' + (amt || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount" oninput="costEdit(this)">' +
+      '<input class="cost-input-desc" type="text" value="' + desc + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc" onblur="costSave(this)">' +
+      '<input class="cost-input-amount" type="number" value="' + (amt || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount" onblur="costSave(this)" oninput="costUpdateTotal(this)">' +
       '<button class="cost-btn-del" onclick="deleteCost(\'' + c.id + '\')">✕</button>' +
       '</div>';
   }
@@ -623,36 +623,39 @@ function renderCosts() {
   }
 }
 
-function costEdit(inp) {
+// 金额输入时实时更新本地总额
+function costUpdateTotal(inp) {
   var id = inp.dataset.cid;
-  var field = inp.dataset.field;
-  // 找到对应成本项
   var cost = null;
   for (var i = 0; i < costs.length; i++) {
     if (costs[i].id === id) { cost = costs[i]; break; }
   }
   if (!cost) return;
-
-  if (field === 'amount') {
-    cost.amount = parseFloat(inp.value) || 0;
-  } else {
-    cost.description = inp.value;
-  }
-
-  // 更新总额
+  cost.amount = parseFloat(inp.value) || 0;
   var total = 0;
   for (var i = 0; i < costs.length; i++) {
     total += parseFloat(costs[i].amount) || 0;
   }
   $('costTotal').textContent = total.toFixed(2);
+}
 
-  // 防抖同步到云端
-  if (costTimers[id]) clearTimeout(costTimers[id]);
-  costTimers[id] = setTimeout(function() {
-    var updateData = {};
-    updateData[field] = cost[field];
-    api('PATCH', REST + '/costs?id=eq.' + id, updateData).catch(function() {});
-  }, 1000);
+// 离开输入框时保存到云端
+function costSave(inp) {
+  var id = inp.dataset.cid;
+  var field = inp.dataset.field;
+  var cost = null;
+  for (var i = 0; i < costs.length; i++) {
+    if (costs[i].id === id) { cost = costs[i]; break; }
+  }
+  if (!cost) return;
+  if (field === 'amount') {
+    cost.amount = parseFloat(inp.value) || 0;
+  } else {
+    cost.description = inp.value;
+  }
+  var updateData = {};
+  updateData[field] = cost[field];
+  api('PATCH', REST + '/costs?id=eq.' + id, updateData).catch(function() {});
 }
 
 async function deleteCost(id) {
