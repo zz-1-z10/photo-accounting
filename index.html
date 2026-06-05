@@ -400,6 +400,20 @@ document.addEventListener('DOMContentLoaded', function() {
   $('closeTextBtn').addEventListener('click', function() { $('textModal').classList.remove('open'); });
   $('textModal').addEventListener('click', function(e) { if (e.target === this) $('textModal').classList.remove('open'); });
 
+  // ====== 成本事件委托（兼容 iOS） ======
+  $('costList').addEventListener('input', function(e) {
+    var target = e.target;
+    if (target.dataset && target.dataset.cid) {
+      costSave(target);
+    }
+  });
+  $('costList').addEventListener('click', function(e) {
+    var target = e.target;
+    if (target.dataset && target.dataset.cid && target.className === 'cost-btn-del') {
+      delCost(target.dataset.cid);
+    }
+  });
+
   // ====== 检查登录状态 ======
   var t = localStorage.getItem('t'), u = localStorage.getItem('u');
   if (t && u) { token = t; user = JSON.parse(u); enterApp(); }
@@ -465,7 +479,7 @@ function renderCosts() {
   var el = $('costList'), total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
   if (!costs.length) { el.innerHTML = ''; return; }
   var st = costs.length > 2, html = '';
-  costs.forEach(function(c) { var a = parseFloat(c.amount) || 0, d = esc(c.description || ''); html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc" oninput="costSave(this)"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount" oninput="costSave(this)"><button class="cost-btn-del" onclick="delCost(\'' + c.id + '\')">✕</button></div>'; });
+  costs.forEach(function(c) { var a = parseFloat(c.amount) || 0, d = esc(c.description || ''); html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount"><button class="cost-btn-del" data-cid="' + c.id + '">✕</button></div>'; });
   el.innerHTML = html; saveLocal('costs', costs);
   if (st) { el.classList.add('collapsed'); if (costExpand) el.classList.remove('collapsed'); var tb = document.createElement('button'); tb.className = 'cost-toggle-btn'; tb.textContent = costExpand ? '▲ 收起' : '▼ 展开全部（共 ' + costs.length + ' 项）'; tb.onclick = function() { costExpand = !costExpand; renderCosts(); }; el.appendChild(tb); }
   else { el.classList.remove('collapsed'); costExpand = false; }
