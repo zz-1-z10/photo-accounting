@@ -410,9 +410,25 @@ async function loadData() {
       api('GET', REST + '/costs?user_id=eq.' + user.id + '&order=created_at.asc')
     ]);
     records = recData || [];
-    // 用云端成本替换本地（云端有完整 ID）
+    // 合并云端成本：用云端 ID 更新本地，但不覆盖本地已填内容
     if (costData && costData.length > 0) {
-      costs = costData;
+      var localMap = {};
+      for (var li = 0; li < costs.length; li++) {
+        localMap[costs[li].id] = costs[li];
+      }
+      var merged = [];
+      for (var ci = 0; ci < costData.length; ci++) {
+        var cloud = costData[ci];
+        var local = localMap[cloud.id] || localMap['temp_' + ci];
+        if (local) {
+          // 保留本地填的内容，更新云端 ID
+          local.id = cloud.id;
+          merged.push(local);
+        } else {
+          merged.push(cloud);
+        }
+      }
+      costs = merged;
       saveCostsLocal();
     }
     renderRecords();
