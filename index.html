@@ -549,7 +549,11 @@ $('btnAdd').onclick = async function() {
   renderRecords();
   $('inputPrice').value = '';
   $('inputNote').value = '';
-  $('inputPrice').focus();
+  // 跳到明细列表顶部，方便查看刚填的单
+  setTimeout(function() {
+    var el = $('recordContainer').querySelector('.date-group');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 };
 
 $('clearAllBtn').onclick = async function() {
