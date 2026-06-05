@@ -68,7 +68,6 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; marg
 .stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
 .list-header { display: flex; justify-content: space-between; align-items: center; margin: 0 16px 10px; }
 .list-header h2 { font-size: 16px; color: #333; }
-.btn-clear { background: none; border: none; font-size: 13px; color: #e63946; cursor: pointer; }
 .date-group { margin: 0 16px; }
 .date-group + .date-group { margin-top: 12px; }
 .date-header { background: #fff; border-radius: 12px 12px 0 0; padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; color: #16213e; border-bottom: 1px solid #f0f0f0; }
@@ -188,11 +187,9 @@ var AUTH = SB_URL + '/auth/v1';
 
 var user = null, token = null, records = [], costs = [], costOpen = false, costExpand = false;
 
-// 本地存储防丢失
+function $(id) { return document.getElementById(id); }
 function saveLocal(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 function loadLocal(k) { try { var d = JSON.parse(localStorage.getItem(k)); if (d) return d; } catch (e) {} return null; }
-
-function $(id) { return document.getElementById(id); }
 function apiHeaders() { var h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' }; if (token) h['Authorization'] = 'Bearer ' + token; return h; }
 
 async function api(method, url, body) {
@@ -224,102 +221,215 @@ function dateKey(d) {
   return d;
 }
 
-function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); $(id).classList.add('active'); $('toolbar').style.display = id === 'appPage' ? 'flex' : 'none'; }
-function setSync(t) { $('syncBar').textContent = t || '☁️ 数据已同步到云端'; }
-
-// ====== 登录 ======
-$('tabLogin').onclick = function() { document.querySelectorAll('.auth-tab,.auth-form').forEach(function(e) { e.classList.remove('active'); }); this.classList.add('active'); $('loginForm').classList.add('active'); document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); }); $('registerSuccess').classList.remove('show'); };
-$('tabRegister').onclick = function() { document.querySelectorAll('.auth-tab,.auth-form').forEach(function(e) { e.classList.remove('active'); }); this.classList.add('active'); $('registerForm').classList.add('active'); document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); }); $('registerSuccess').classList.remove('show'); };
-
-$('loginBtn').onclick = async function() {
-  var email = $('loginEmail').value.trim(), password = $('loginPassword').value;
-  if (!email || !password) { $('loginError').textContent = '请输入邮箱和密码'; $('loginError').classList.add('show'); return; }
-  this.disabled = true; $('loginLoading').style.display = 'block'; $('loginError').classList.remove('show');
-  try {
-    var data = await api('POST', AUTH + '/token?grant_type=password', { email: email, password: password });
-    user = data.user; token = data.access_token;
-    localStorage.setItem('t', data.access_token); localStorage.setItem('rt', data.refresh_token); localStorage.setItem('u', JSON.stringify(data.user));
-    enterApp();
-  } catch (e) { $('loginError').textContent = e.message.includes('Invalid') ? '邮箱或密码错误' : e.message; $('loginError').classList.add('show'); }
-  this.disabled = false; $('loginLoading').style.display = 'none';
-};
-
-$('registerBtn').onclick = async function() {
-  var email = $('regEmail').value.trim(), password = $('regPassword').value;
-  if (!email || !password) { $('registerError').textContent = '请输入邮箱和密码'; $('registerError').classList.add('show'); return; }
-  if (password.length < 6) { $('registerError').textContent = '密码至少6位'; $('registerError').classList.add('show'); return; }
-  this.disabled = true; $('registerLoading').style.display = 'block'; $('registerError').classList.remove('show');
-  try { await api('POST', AUTH + '/signup', { email: email, password: password }); $('registerSuccess').classList.add('show'); this.textContent = '注册成功 ✓'; }
-  catch (e) { $('registerError').textContent = e.message; $('registerError').classList.add('show'); }
-  this.disabled = false; $('registerLoading').style.display = 'none';
-};
-
-$('logoutBtn').onclick = async function() { try { await api('POST', AUTH + '/logout'); } catch (e) {} user = null; token = null; localStorage.removeItem('t'); localStorage.removeItem('rt'); localStorage.removeItem('u'); showPage('authPage'); };
-
-async function enterApp() { showPage('appPage'); $('userEmail').textContent = user.email; $('inputDate').value = new Date().toISOString().slice(0, 10); await loadData(); }
-
-// ====== 数据加载 ======
-async function loadData() {
-  setSync('⏳ 同步中...');
-  // 先读本地缓存（立即显示）
-  var localRecs = loadLocal('recs'); if (localRecs) { records = localRecs; renderRecords(); }
-  var localCosts = loadLocal('costs'); if (localCosts) { costs = localCosts; renderCosts(); }
-  try {
-    var rd = await api('GET', REST + '/records?user_id=eq.' + user.id + '&order=created_at.asc');
-    if (rd && rd.length > 0) { records = rd; saveLocal('recs', records); renderRecords(); }
-    var cd = await api('GET', REST + '/costs?user_id=eq.' + user.id + '&order=created_at.asc');
-    if (cd && cd.length > 0) {
-      // 合并云端成本：用云端 ID，保留本地内容
-      var map = {}; for (var i = 0; i < costs.length; i++) map[costs[i].id] = costs[i];
-      var merged = [];
-      for (var i = 0; i < cd.length; i++) {
-        var c = cd[i];
-        var local = map[c.id] || (i < costs.length && costs[i].id.indexOf('temp_') === 0 ? costs[i] : null);
-        if (local) { local.id = c.id; merged.push(local); } else { merged.push(c); }
-      }
-      costs = merged; saveLocal('costs', costs); renderCosts();
-    }
-    setSync('☁️ 数据已同步到云端');
-  } catch (e) { setSync('⚠️ ' + e.message); }
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  $(id).classList.add('active');
+  $('toolbar').style.display = id === 'appPage' ? 'flex' : 'none';
 }
 
-// ====== 渲染记录 ======
+function setSync(t) { $('syncBar').textContent = t || '☁️ 数据已同步到云端'; }
+function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ====== 所有初始化在 DOM 加载完成后 ======
+document.addEventListener('DOMContentLoaded', function() {
+
+  // 设置日期
+  $('inputDate').value = new Date().toISOString().slice(0, 10);
+
+  // ====== 登录切换 ======
+  $('tabLogin').addEventListener('click', function() {
+    document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
+    this.classList.add('active');
+    $('loginForm').classList.add('active');
+    document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); });
+    $('registerSuccess').classList.remove('show');
+  });
+
+  $('tabRegister').addEventListener('click', function() {
+    document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
+    this.classList.add('active');
+    $('registerForm').classList.add('active');
+    document.querySelectorAll('.auth-error').forEach(function(e) { e.classList.remove('show'); });
+    $('registerSuccess').classList.remove('show');
+  });
+
+  // ====== 登录 ======
+  $('loginBtn').addEventListener('click', async function() {
+    var email = $('loginEmail').value.trim(), password = $('loginPassword').value;
+    if (!email || !password) { $('loginError').textContent = '请输入邮箱和密码'; $('loginError').classList.add('show'); return; }
+    this.disabled = true; $('loginLoading').style.display = 'block'; $('loginError').classList.remove('show');
+    try {
+      var data = await api('POST', AUTH + '/token?grant_type=password', { email: email, password: password });
+      user = data.user; token = data.access_token;
+      localStorage.setItem('t', data.access_token); localStorage.setItem('rt', data.refresh_token); localStorage.setItem('u', JSON.stringify(data.user));
+      enterApp();
+    } catch (e) { $('loginError').textContent = e.message.includes('Invalid') ? '邮箱或密码错误' : e.message; $('loginError').classList.add('show'); }
+    this.disabled = false; $('loginLoading').style.display = 'none';
+  });
+
+  $('registerBtn').addEventListener('click', async function() {
+    var email = $('regEmail').value.trim(), password = $('regPassword').value;
+    if (!email || !password) { $('registerError').textContent = '请输入邮箱和密码'; $('registerError').classList.add('show'); return; }
+    if (password.length < 6) { $('registerError').textContent = '密码至少6位'; $('registerError').classList.add('show'); return; }
+    this.disabled = true; $('registerLoading').style.display = 'block'; $('registerError').classList.remove('show');
+    try { await api('POST', AUTH + '/signup', { email: email, password: password }); $('registerSuccess').classList.add('show'); this.textContent = '注册成功 ✓'; }
+    catch (e) { $('registerError').textContent = e.message; $('registerError').classList.add('show'); }
+    this.disabled = false; $('registerLoading').style.display = 'none';
+  });
+
+  $('logoutBtn').addEventListener('click', async function() {
+    try { await api('POST', AUTH + '/logout'); } catch (e) {}
+    user = null; token = null; localStorage.removeItem('t'); localStorage.removeItem('rt'); localStorage.removeItem('u');
+    showPage('authPage');
+  });
+
+  // ====== 新增记录 ======
+  $('btnAdd').addEventListener('click', async function() {
+    var date = $('inputDate').value, price = $('inputPrice').value, note = $('inputNote').value.trim();
+    if (!date) { alert('请选择日期'); return; }
+    if (!price || parseFloat(price) <= 0) { alert('请输入有效的价钱'); return; }
+    var result = await api('POST', REST + '/records', { user_id: user.id, date: date, price: parseFloat(price), note: note });
+    if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
+    renderRecords();
+    $('inputPrice').value = ''; $('inputNote').value = '';
+    setTimeout(function() { var g = $('recordContainer').querySelector('.date-group'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+  });
+
+  // 回车快捷提交
+  $('inputPrice').addEventListener('keydown', function(e) { if (e.key === 'Enter') $('btnAdd').click(); });
+  $('inputNote').addEventListener('keydown', function(e) { if (e.key === 'Enter') $('btnAdd').click(); });
+
+  // ====== 成本 ======
+  $('costToggle').addEventListener('click', function() {
+    costOpen = !costOpen;
+    $('costPanel').classList.toggle('open', costOpen);
+    this.classList.toggle('open', costOpen);
+    this.textContent = costOpen ? '💰 收起成本' : '💰 成本';
+  });
+
+  $('addCostBtn').addEventListener('click', async function() {
+    var tid = 'temp_' + Date.now(); costs.push({ id: tid, description: '', amount: 0 }); renderCosts();
+    setTimeout(function() { var items = document.querySelectorAll('.cost-item'); if (items.length) items[items.length - 1].querySelector('.cost-input-desc').focus(); }, 100);
+    try {
+      var result = await api('POST', REST + '/costs', { user_id: user.id, description: '', amount: 0 });
+      var rid = null; if (Array.isArray(result) && result.length > 0) rid = result[0].id; else if (result && result.id) rid = result.id;
+      if (rid) { for (var i = 0; i < costs.length; i++) { if (costs[i].id === tid) { costs[i].id = rid; break; } } renderCosts(); saveLocal('costs', costs); }
+    } catch (e) {}
+  });
+
+  $('clearCostsBtn').addEventListener('click', async function() {
+    if (!confirm('确定清空所有成本项？')) return;
+    for (var i = 0; i < costs.length; i++) await api('DELETE', REST + '/costs?id=eq.' + costs[i].id);
+    costs = []; renderCosts(); saveLocal('costs', costs);
+  });
+
+  // ====== 导入 ======
+  $('openImportBtn').addEventListener('click', function() { $('importModal').classList.add('open'); $('importText').value = ''; });
+  $('closeImportBtn').addEventListener('click', function() { $('importModal').classList.remove('open'); });
+  $('cancelImportBtn').addEventListener('click', function() { $('importModal').classList.remove('open'); });
+
+  $('doImportBtn').addEventListener('click', async function() {
+    var text = $('importText').value; if (!text.trim()) { alert('请粘贴数据'); return; }
+    var lines = text.split('\n'), items = [];
+    for (var li = 0; li < lines.length; li++) {
+      var line = lines[li].trim(); if (!line) continue;
+      if (/^(日期|date|单价|小计|合计|━━|===|#)/i.test(line)) continue;
+      if (/^[─═━=]+$/.test(line)) continue;
+      var date = '', price = 0, note = '', m;
+      m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*$/);
+      if (m) { date = m[1]; price = parseFloat(m[2]); }
+      else {
+        m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*[-—](.+)$/);
+        if (m) { date = m[1]; price = parseFloat(m[2]); note = m[3].trim(); }
+        else {
+          m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
+          if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = m[5].trim(); }
+          else {
+            m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
+            if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = (m[5]||'').trim(); }
+          }
+        }
+      }
+      if (date && price > 0) {
+        if (date.indexOf('~') !== -1) { var ps = date.split('~'); date = ps[0].replace(/[/\.]/g, '-'); if (date.match(/^\d{4}-\d{1,2}$/)) date += '-01'; }
+        else { date = date.replace(/[/\.]/g, '-'); if (!date.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) { var dm = date.match(/^(\d{4}-\d{1,2})$/); if (dm) date = dm[1] + '-01'; } }
+        items.push({ date: date, price: price, note: note });
+      }
+    }
+    if (!items.length) { alert('未能识别出有效数据。'); return; }
+    if (!confirm('识别到 ' + items.length + ' 条记录，确认导入？')) return;
+    setSync('⏳ 正在导入 ' + items.length + ' 条...');
+    var ok = 0, err = 0;
+    for (var i = 0; i < items.length; i++) {
+      try {
+        var item = items[i], result = await api('POST', REST + '/records', { user_id: user.id, date: item.date, price: item.price, note: item.note || '' });
+        if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
+        ok++;
+      } catch (e) { err++; if (err <= 3) console.log('导入失败:', item.date, item.price, e.message); }
+    }
+    records.sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
+    renderRecords(); $('importModal').classList.remove('open');
+    setSync('☁️ 导入完成：成功 ' + ok + ' 条' + (err > 0 ? '，失败 ' + err + ' 条' : ''));
+    if (ok > 0) alert('✅ 成功导入 ' + ok + ' 条记录！' + (err > 0 ? '\n失败 ' + err + ' 条（详情见控制台）' : ''));
+  });
+
+  // ====== 文本查看 ======
+  $('openTextBtn').addEventListener('click', function() {
+    var txt = '=== 纯纯拍照记账 ===\n';
+    if (costs.length) {
+      txt += '\n--- 成本 ---\n'; var ct = 0;
+      costs.forEach(function(c) { var a = parseFloat(c.amount) || 0; ct += a; txt += '  ' + (c.description || '(未命名)') + '：' + a.toFixed(2) + '元\n'; });
+      txt += '  成本合计：' + ct.toFixed(2) + '元\n';
+    }
+    var gt = 0; records.forEach(function(r) { gt += parseFloat(r.price) || 0; });
+    txt += '\n总单数：' + records.length + '\n总金额：' + gt.toFixed(2) + ' 元\n\n';
+    var sorted = records.slice().sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
+    var groups = {}; sorted.forEach(function(r) { var d = r.date || '未知'; if (!groups[d]) groups[d] = []; groups[d].push(r); });
+    var dl = Object.keys(groups).sort(function(a, b) { return dateKey(a) > dateKey(b) ? 1 : -1; });
+    var sn = 0;
+    dl.forEach(function(date) {
+      var items = groups[date], dt = 0; items.forEach(function(r) { dt += parseFloat(r.price) || 0; });
+      txt += '📅 ' + date + '  —  ' + dt.toFixed(2) + '元\n';
+      items.forEach(function(r) { sn++; txt += '  第' + sn + '单  ' + (parseFloat(r.price) || 0).toFixed(2) + '元' + (r.note ? '  📌 ' + r.note : '') + '\n'; });
+    });
+    $('textViewContent').textContent = txt; $('textModal').classList.add('open');
+  });
+
+  $('closeTextBtn').addEventListener('click', function() { $('textModal').classList.remove('open'); });
+  $('textModal').addEventListener('click', function(e) { if (e.target === this) $('textModal').classList.remove('open'); });
+
+  // ====== 检查登录状态 ======
+  var t = localStorage.getItem('t'), u = localStorage.getItem('u');
+  if (t && u) { token = t; user = JSON.parse(u); enterApp(); }
+});
+
+// ====== 全局函数 ======
 var showAll = false;
 
 function renderRecords() {
   var el = $('recordContainer');
   if (!records.length) { el.innerHTML = '<div class="empty-state">还没有记录，记第一单吧 ✍️</div>'; $('totalCount').textContent = '0'; $('grandTotal').textContent = '0.00'; return; }
-
   var sorted = records.slice().sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
   var groups = {};
   sorted.forEach(function(r, i) { var d = r.date || '未知'; if (!groups[d]) groups[d] = []; groups[d].push({ id: r.id, date: r.date, price: r.price, note: r.note, seq: i + 1 }); });
-
   var dl = Object.keys(groups).sort(function(a, b) { return dateKey(a) < dateKey(b) ? 1 : -1; });
   var gt = 0, html = '', sc = showAll ? dl.length : Math.min(2, dl.length);
-
   for (var di = 0; di < dl.length; di++) {
     var date = dl[di], items = groups[date], dt = 0;
     items.forEach(function(r) { dt += parseFloat(r.price) || 0; gt += parseFloat(r.price) || 0; });
-    var style = di < sc ? '' : ' style="display:none"';
-    html += '<div class="date-group"' + style + '><div class="date-header"><span>📅 ' + date + '</span><span class="date-total">' + dt.toFixed(2) + ' 元</span></div><div class="date-records">';
+    var sty = di < sc ? '' : ' style="display:none"';
+    html += '<div class="date-group"' + sty + '><div class="date-header"><span>📅 ' + date + '</span><span class="date-total">' + dt.toFixed(2) + ' 元</span></div><div class="date-records">';
     items.forEach(function(r) {
       var p = parseFloat(r.price) || 0, note = r.note ? '<span class="record-note-text">📌 ' + esc(r.note) + '</span>' : '';
       html += '<div class="record-item"><div><span class="record-num">第 ' + r.seq + ' 单</span>' + note + '</div><div><span class="record-price-text">' + p.toFixed(2) + ' 元</span><button class="btn-del" onclick="delRec(\'' + r.id + '\')">✕</button></div></div>';
     });
     html += '</div></div>';
   }
-
-  // 清空按钮在底部
-  if (records.length > 0) {
-    html += '<div style="text-align:center;margin:12px 16px 0"><button onclick="if(confirm(\'确定清空全部记录？\'))clearAllRecs()" style="font-size:13px;padding:6px 16px;border:1px solid #e63946;border-radius:8px;background:transparent;color:#e63946;cursor:pointer">清空全部记录</button></div>';
-  }
-
-  if (dl.length > 2) {
-    html += '<div style="text-align:center;margin:10px 16px 0"><button id="toggleBtn" onclick="toggleAll()" style="padding:8px 20px;font-size:14px;border-radius:10px;border:1.5px solid #4361ee;color:#4361ee;background:#fff;cursor:pointer">' + (showAll ? '▲ 收起' : '▼ 展开全部明细') + '</button></div>';
-  }
-
-  el.innerHTML = html; $('totalCount').textContent = records.length; $('grandTotal').textContent = gt.toFixed(2);
-  saveLocal('recs', records);
+  if (records.length > 0) html += '<div style="text-align:center;margin:12px 16px 0"><button onclick="if(confirm(\'确定清空全部记录？\'))clearAllRecs()" style="font-size:13px;padding:6px 16px;border:1px solid #e63946;border-radius:8px;background:transparent;color:#e63946;cursor:pointer">清空全部记录</button></div>';
+  if (dl.length > 2) html += '<div style="text-align:center;margin:10px 16px 0"><button onclick="toggleAll()" style="padding:8px 20px;font-size:14px;border-radius:10px;border:1.5px solid #4361ee;color:#4361ee;background:#fff;cursor:pointer">' + (showAll ? '▲ 收起' : '▼ 展开全部明细') + '</button></div>';
+  el.innerHTML = html; $('totalCount').textContent = records.length; $('grandTotal').textContent = gt.toFixed(2); saveLocal('recs', records);
 }
 
 function toggleAll() { showAll = !showAll; renderRecords(); }
@@ -328,154 +438,49 @@ async function delRec(id) { if (!confirm('确定删除？')) return; await api('
 
 async function clearAllRecs() { for (var i = 0; i < records.length; i++) await api('DELETE', REST + '/records?id=eq.' + records[i].id); records = []; renderRecords(); }
 
-// ====== 新增记录 ======
-$('btnAdd').onclick = async function() {
-  var date = $('inputDate').value, price = $('inputPrice').value, note = $('inputNote').value.trim();
-  if (!date) { alert('请选择日期'); return; }
-  if (!price || parseFloat(price) <= 0) { alert('请输入有效的价钱'); return; }
-  var result = await api('POST', REST + '/records', { user_id: user.id, date: date, price: parseFloat(price), note: note });
-  if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
-  renderRecords();
-  $('inputPrice').value = ''; $('inputNote').value = '';
-  // 滚动到刚填的单
-  setTimeout(function() { var g = $('recordContainer').querySelector('.date-group'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
-};
+async function enterApp() { showPage('appPage'); $('userEmail').textContent = user.email; await loadData(); }
 
-// ====== 成本 ======
-$('costToggle').onclick = function() { costOpen = !costOpen; $('costPanel').classList.toggle('open', costOpen); this.classList.toggle('open', costOpen); this.textContent = costOpen ? '💰 收起成本' : '💰 成本'; };
-
-$('addCostBtn').onclick = async function() {
-  var tid = 'temp_' + Date.now(); costs.push({ id: tid, description: '', amount: 0 }); renderCosts();
-  setTimeout(function() { var items = document.querySelectorAll('.cost-item'); if (items.length) items[items.length - 1].querySelector('.cost-input-desc').focus(); }, 100);
+async function loadData() {
+  setSync('⏳ 同步中...');
+  var lr = loadLocal('recs'); if (lr) { records = lr; renderRecords(); }
+  var lc = loadLocal('costs'); if (lc) { costs = lc; renderCosts(); }
   try {
-    var result = await api('POST', REST + '/costs', { user_id: user.id, description: '', amount: 0 });
-    var rid = null; if (Array.isArray(result) && result.length > 0) rid = result[0].id; else if (result && result.id) rid = result.id;
-    if (rid) { for (var i = 0; i < costs.length; i++) { if (costs[i].id === tid) { costs[i].id = rid; break; } } renderCosts(); saveLocal('costs', costs); }
-  } catch (e) {}
-};
-
-$('clearCostsBtn').onclick = async function() { if (!confirm('确定清空所有成本项？')) return; for (var i = 0; i < costs.length; i++) await api('DELETE', REST + '/costs?id=eq.' + costs[i].id); costs = []; renderCosts(); saveLocal('costs', costs); };
+    var rd = await api('GET', REST + '/records?user_id=eq.' + user.id + '&order=created_at.asc');
+    if (rd && rd.length > 0) { records = rd; saveLocal('recs', records); renderRecords(); }
+    var cd = await api('GET', REST + '/costs?user_id=eq.' + user.id + '&order=created_at.asc');
+    if (cd && cd.length > 0) {
+      var map = {}; for (var i = 0; i < costs.length; i++) map[costs[i].id] = costs[i];
+      var merged = [];
+      for (var i = 0; i < cd.length; i++) {
+        var c = cd[i], local = map[c.id] || (i < costs.length && costs[i].id.indexOf('temp_') === 0 ? costs[i] : null);
+        if (local) { local.id = c.id; merged.push(local); } else { merged.push(c); }
+      }
+      costs = merged; saveLocal('costs', costs); renderCosts();
+    }
+    setSync('☁️ 数据已同步到云端');
+  } catch (e) { setSync('⚠️ ' + e.message); }
+}
 
 function renderCosts() {
   var el = $('costList'), total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
   if (!costs.length) { el.innerHTML = ''; return; }
   var st = costs.length > 2, html = '';
-  costs.forEach(function(c) {
-    var a = parseFloat(c.amount) || 0, d = esc(c.description || '');
-    html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc" onblur="costSave(this)"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount" onblur="costSave(this)" oninput="costUpdTotal(this)"><button class="cost-btn-del" onclick="delCost(\'' + c.id + '\')">✕</button></div>';
-  });
+  costs.forEach(function(c) { var a = parseFloat(c.amount) || 0, d = esc(c.description || ''); html += '<div class="cost-item"><input class="cost-input-desc" type="text" value="' + d + '" placeholder="成本项目" data-cid="' + c.id + '" data-field="desc" onblur="costSave(this)"><input class="cost-input-amount" type="number" value="' + (a || '') + '" placeholder="金额" min="0" step="0.01" data-cid="' + c.id + '" data-field="amount" onblur="costSave(this)" oninput="costUpdTotal(this)"><button class="cost-btn-del" onclick="delCost(\'' + c.id + '\')">✕</button></div>'; });
   el.innerHTML = html; saveLocal('costs', costs);
   if (st) { el.classList.add('collapsed'); if (costExpand) el.classList.remove('collapsed'); var tb = document.createElement('button'); tb.className = 'cost-toggle-btn'; tb.textContent = costExpand ? '▲ 收起' : '▼ 展开全部（共 ' + costs.length + ' 项）'; tb.onclick = function() { costExpand = !costExpand; renderCosts(); }; el.appendChild(tb); }
   else { el.classList.remove('collapsed'); costExpand = false; }
 }
 
-function costUpdTotal(inp) {
-  var cost = null; for (var i = 0; i < costs.length; i++) { if (costs[i].id === inp.dataset.cid) { cost = costs[i]; break; } }
-  if (!cost) return; cost.amount = parseFloat(inp.value) || 0;
-  var total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2);
-}
+function costUpdTotal(inp) { var cost = null; for (var i = 0; i < costs.length; i++) { if (costs[i].id === inp.dataset.cid) { cost = costs[i]; break; } } if (!cost) return; cost.amount = parseFloat(inp.value) || 0; var total = 0; costs.forEach(function(c) { total += parseFloat(c.amount) || 0; }); $('costTotal').textContent = total.toFixed(2); }
 
 function costSave(inp) {
   var id = inp.dataset.cid, field = inp.dataset.field, cost = null;
   for (var i = 0; i < costs.length; i++) { if (costs[i].id === id) { cost = costs[i]; break; } }
-  if (!cost) return;
-  if (field === 'amount') cost.amount = parseFloat(inp.value) || 0; else cost.description = inp.value;
-  saveLocal('costs', costs);
-  if (id && id.indexOf('temp_') !== 0) { var ud = {}; ud[field] = cost[field]; api('PATCH', REST + '/costs?id=eq.' + id, ud).catch(function(){}); }
+  if (!cost) return; if (field === 'amount') cost.amount = parseFloat(inp.value) || 0; else cost.description = inp.value;
+  saveLocal('costs', costs); if (id && id.indexOf('temp_') !== 0) { var ud = {}; ud[field] = cost[field]; api('PATCH', REST + '/costs?id=eq.' + id, ud).catch(function(){}); }
 }
 
 async function delCost(id) { if (!confirm('确定删除这项成本？')) return; await api('DELETE', REST + '/costs?id=eq.' + id); costs = costs.filter(function(c) { return c.id !== id; }); renderCosts(); saveLocal('costs', costs); }
-
-// ====== 文本查看 ======
-$('openTextBtn').onclick = function() {
-  var txt = '=== 纯纯拍照记账 ===\n';
-  if (costs.length) {
-    txt += '\n--- 成本 ---\n'; var ct = 0;
-    costs.forEach(function(c) { var a = parseFloat(c.amount) || 0; ct += a; txt += '  ' + (c.description || '(未命名)') + '：' + a.toFixed(2) + '元\n'; });
-    txt += '  成本合计：' + ct.toFixed(2) + '元\n';
-  }
-  var gt = 0; records.forEach(function(r) { gt += parseFloat(r.price) || 0; });
-  txt += '\n总单数：' + records.length + '\n总金额：' + gt.toFixed(2) + ' 元\n\n';
-
-  var sorted = records.slice().sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
-  var groups = {}; sorted.forEach(function(r) { var d = r.date || '未知'; if (!groups[d]) groups[d] = []; groups[d].push(r); });
-  var dl = Object.keys(groups).sort(function(a, b) { return dateKey(a) > dateKey(b) ? 1 : -1; });
-  var sn = 0;
-
-  dl.forEach(function(date) {
-    var items = groups[date], dt = 0; items.forEach(function(r) { dt += parseFloat(r.price) || 0; });
-    txt += '📅 ' + date + '  —  ' + dt.toFixed(2) + '元\n';
-    items.forEach(function(r) { sn++; txt += '  第' + sn + '单  ' + (parseFloat(r.price) || 0).toFixed(2) + '元' + (r.note ? '  📌 ' + r.note : '') + '\n'; });
-  });
-
-  $('textViewContent').textContent = txt; $('textModal').classList.add('open');
-};
-$('closeTextBtn').onclick = function() { $('textModal').classList.remove('open'); };
-$('textModal').onclick = function(e) { if (e.target === this) $('textModal').classList.remove('open'); };
-
-// ====== 导入 ======
-$('openImportBtn').onclick = function() { $('importModal').classList.add('open'); $('importText').value = ''; };
-$('closeImportBtn').onclick = function() { $('importModal').classList.remove('open'); };
-$('cancelImportBtn').onclick = function() { $('importModal').classList.remove('open'); };
-
-$('doImportBtn').onclick = async function() {
-  var text = $('importText').value; if (!text.trim()) { alert('请粘贴数据'); return; }
-  var lines = text.split('\n'), items = [];
-  for (var li = 0; li < lines.length; li++) {
-    var line = lines[li].trim(); if (!line) continue;
-    if (/^(日期|date|单价|小计|合计|━━|===|#)/i.test(line)) continue;
-    if (/^[─═━=]+$/.test(line)) continue;
-    var date = '', price = 0, note = '', m;
-
-    m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*$/);
-    if (m) { date = m[1]; price = parseFloat(m[2]); }
-    else {
-      m = line.match(/^(\S+?)\s*-\s*第\d+单\s*-\s*金额[：:]\s*(\d+(?:\.\d+)?)\s*\.?\s*[-—](.+)$/);
-      if (m) { date = m[1]; price = parseFloat(m[2]); note = m[3].trim(); }
-      else {
-        m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s+(\d+(?:\.\d+)?)\s*(.*?)$/);
-        if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = m[5].trim(); }
-        else {
-          m = line.match(/^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})\s*[,，]\s*(\d+(?:\.\d+)?)\s*(?:[,，]\s*(.*?))?$/);
-          if (m) { date = m[1] + '-' + m[2].padStart(2,'0') + '-' + m[3].padStart(2,'0'); price = parseFloat(m[4]); note = (m[5]||'').trim(); }
-        }
-      }
-    }
-    if (date && price > 0) {
-      if (date.indexOf('~') !== -1) { var ps = date.split('~'); date = ps[0].replace(/[/\.]/g, '-'); if (date.match(/^\d{4}-\d{1,2}$/)) date += '-01'; }
-      else { date = date.replace(/[/\.]/g, '-'); if (!date.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) { var dm = date.match(/^(\d{4}-\d{1,2})$/); if (dm) date = dm[1] + '-01'; } }
-      items.push({ date: date, price: price, note: note });
-    }
-  }
-  if (!items.length) { alert('未能识别出有效数据。'); return; }
-  if (!confirm('识别到 ' + items.length + ' 条记录，确认导入？')) return;
-  setSync('⏳ 正在导入 ' + items.length + ' 条...');
-  var ok = 0, err = 0;
-  for (var i = 0; i < items.length; i++) {
-    try {
-      var item = items[i], result = await api('POST', REST + '/records', { user_id: user.id, date: item.date, price: item.price, note: item.note || '' });
-      if (Array.isArray(result) && result.length > 0) records.push(result[0]); else if (result) records.push(result);
-      ok++;
-    } catch (e) { err++; if (err <= 3) console.log('导入失败:', item.date, item.price, e.message); }
-  }
-  records.sort(function(a, b) { return dateKey(a.date) > dateKey(b.date) ? 1 : -1; });
-  renderRecords(); $('importModal').classList.remove('open');
-  setSync('☁️ 导入完成：成功 ' + ok + ' 条' + (err > 0 ? '，失败 ' + err + ' 条' : ''));
-  if (ok > 0) alert('✅ 成功导入 ' + ok + ' 条记录！' + (err > 0 ? '\n失败 ' + err + ' 条（详情见控制台）' : ''));
-};
-
-function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-// ====== 快捷键 ======
-$('inputPrice').addEventListener('keydown', function(e) { if (e.key === 'Enter') $('btnAdd').click(); });
-$('inputNote').addEventListener('keydown', function(e) { if (e.key === 'Enter') $('btnAdd').click(); });
-
-// ====== 初始化 ======
-document.addEventListener('DOMContentLoaded', function() {
-  $('inputDate').value = new Date().toISOString().slice(0, 10);
-  var t = localStorage.getItem('t'), u = localStorage.getItem('u');
-  if (t && u) { token = t; user = JSON.parse(u); enterApp(); }
-});
 </script>
 </body>
 </html>
