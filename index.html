@@ -81,7 +81,7 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; marg
 .record-item .record-price-text { font-size: 16px; font-weight: 700; color: #2d6a4f; }
 .record-item .btn-del { background: none; border: none; font-size: 16px; color: #ccc; cursor: pointer; margin-left: 6px; }
 .empty-state { text-align: center; color: #aaa; padding: 40px 0; font-size: 15px; margin: 0 16px; }
-.import-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 100; padding: 20px 16px; }
+.import-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 200; padding: 20px 16px; }
 .import-modal.open { display: block; }
 .import-modal .modal-box { background: #fff; border-radius: 16px; padding: 20px; max-width: 640px; margin: 20px auto; }
 .import-modal h3 { font-size: 16px; color: #16213e; margin-bottom: 10px; display: flex; justify-content: space-between; }
@@ -97,7 +97,7 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; marg
 .modal-close { background: none; border: none; font-size: 22px; color: #999; cursor: pointer; }
 .text-view { font-size: 14px; line-height: 1.8; color: #333; white-space: pre-wrap; font-family: monospace; }
 .sync-bar { text-align: center; font-size: 12px; color: #bbb; padding: 4px 0 0; margin: 0 16px; }
-.toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); display: flex; gap: 10px; max-width: 640px; margin: 0 auto; align-items: center; }
+.toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); display: flex; gap: 10px; max-width: 640px; margin: 0 auto; align-items: center; z-index: 50; }
 .toolbar button { padding: 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; background: #fff; font-size: 14px; color: #333; cursor: pointer; }
 .toolbar button:active { background: #f5f5f5; }
 .toolbar .btn-small { padding: 8px 10px; font-size: 12px; flex: 0 0 auto; color: #4361ee; border-color: #4361ee; }
