@@ -230,10 +230,14 @@ let costs = [];
 let costOpen = false;
 let costExpand = false;
 
-// 成本存本地防丢失
+// 本地存储防丢失
 function saveCostsLocal() { localStorage.setItem('costs', JSON.stringify(costs)); }
 function loadCostsLocal() {
   try { var d = JSON.parse(localStorage.getItem('costs')); if (d) costs = d; } catch(e) {}
+}
+function saveRecordsLocal() { localStorage.setItem('recs', JSON.stringify(records)); }
+function loadRecordsLocal() {
+  try { var d = JSON.parse(localStorage.getItem('recs')); if (d) records = d; } catch(e) {}
 }
 
 
@@ -274,6 +278,7 @@ async function api(method, url, body) {
     if (!res.ok) throw new Error(data.message || data.error_description || data.msg || '请求失败');
     return data;
   } catch (e) {
+    // 201 空响应（无 Prefer 头的 POST/PATCH）→ 返回 null 算成功
     if (res.ok) return null;
     throw e;
   }
@@ -401,15 +406,17 @@ async function enterApp() {
 // ====== 数据加载 ======
 async function loadData() {
   setSync('⏳ 同步中...');
-  // 先从本地加载成本（立即显示）
+  // 先从本地加载（立即显示）
+  loadRecordsLocal();
   loadCostsLocal();
+  renderRecords();
   renderCosts();
   try {
     const [recData, costData] = await Promise.all([
       api('GET', REST + '/records?user_id=eq.' + user.id + '&order=created_at.asc'),
       api('GET', REST + '/costs?user_id=eq.' + user.id + '&order=created_at.asc')
     ]);
-    records = recData || [];
+    if (recData && recData.length > 0) { records = recData; saveRecordsLocal(); }
     // 合并云端成本：用云端 ID 更新本地，但不覆盖本地已填内容
     if (costData && costData.length > 0) {
       var localMap = {};
@@ -512,6 +519,7 @@ function renderRecords() {
   container.innerHTML = html;
   $('totalCount').textContent = records.length;
   $('grandTotal').textContent = grandTotal.toFixed(2);
+  saveRecordsLocal();
 }
 
 function toggleAllRecords() {
@@ -741,6 +749,7 @@ $('openTextBtn').onclick = function() {
     return dateKey(a) > dateKey(b) ? 1 : -1;
   });
 
+  var seqNum = 0;
   for (var di = 0; di < dateList.length; di++) {
     var date = dateList[di];
     var items = groups[date];
@@ -750,14 +759,9 @@ $('openTextBtn').onclick = function() {
     }
     txt += '📅 ' + date + '  —  ' + dayTotal.toFixed(2) + '元\n';
 
-    var seqOffset = 0;
-    for (var pi = 0; pi < di; pi++) {
-      seqOffset += groups[dateList[pi]].length;
-    }
-
     for (var ii = 0; ii < items.length; ii++) {
-      var seq = seqOffset + ii + 1;
-      txt += '  第' + seq + '单  ' + (parseFloat(items[ii].price) || 0).toFixed(2) + '元';
+      seqNum++;
+      txt += '  第' + seqNum + '单  ' + (parseFloat(items[ii].price) || 0).toFixed(2) + '元';
       if (items[ii].note) txt += '  📌 ' + items[ii].note;
       txt += '\n';
     }
@@ -866,6 +870,7 @@ $('doImportBtn').onclick = async function() {
       ok++;
     } catch (e) {
       err++;
+      if (err <= 3) console.log('导入失败:', item.date, item.price, e.message);
     }
   }
 
