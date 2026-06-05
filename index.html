@@ -564,6 +564,14 @@ $('addCostBtn').onclick = async function() {
       for (var i = 0; i < costs.length; i++) {
         if (costs[i].id === tempId) {
           costs[i].id = realId;
+          // 用户可能在 POST 完成前就填了内容，同步到真实 ID
+          var item = costs[i];
+          if (item.description) {
+            api('PATCH', REST + '/costs?id=eq.' + realId, { description: item.description }).catch(function(){});
+          }
+          if (item.amount) {
+            api('PATCH', REST + '/costs?id=eq.' + realId, { amount: item.amount }).catch(function(){});
+          }
           break;
         }
       }
