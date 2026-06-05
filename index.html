@@ -47,8 +47,9 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; marg
 .btn-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, #4361ee, #3a0ca3); color: #fff; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; }
 .btn-submit-sm { padding: 10px 18px; background: linear-gradient(135deg, #4361ee, #3a0ca3); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
 .btn-secondary { padding: 10px 18px; background: #f0f0f0; color: #333; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; }
-.btn-cost-toggle { width: 100%; padding: 12px; background: none; border: 1.5px dashed #ccc; border-radius: 12px; font-size: 15px; color: #666; cursor: pointer; margin-top: 10px; }
-.cost-panel { display: none; border-top: 1px solid #f0f0f0; margin-top: 12px; padding-top: 12px; }
+.btn-cost-toggle { width: calc(100% - 32px); padding: 12px; background: none; border: 1.5px dashed #ccc; border-radius: 12px; font-size: 15px; color: #666; cursor: pointer; margin: 0 16px; }
+.cost-panel { display: none; background: #fff; border-radius: 16px; padding: 16px 20px; margin: 10px 16px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.cost-panel.open { display: block; }
 .cost-panel.open { display: block; }
 .cost-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .cost-header .cost-total-amount { font-size: 18px; font-weight: 700; color: #e63946; }
@@ -141,12 +142,12 @@ h1 { text-align: center; font-size: 22px; font-weight: 700; color: #16213e; marg
     </div>
     <div class="form-row"><div class="form-group"><label>📝 备注（可选）</label><input type="text" id="inputNote" placeholder="比如：张三、婚礼跟拍..."></div></div>
     <button class="btn-submit" id="btnAdd">➕ 记一单</button>
-    <button class="btn-cost-toggle" id="costToggle">💰 成本</button>
-    <div class="cost-panel" id="costPanel">
-      <div class="cost-header"><span>总成本</span><span><button class="cost-btn-clear" id="clearCostsBtn">清空</button> <span class="cost-total-amount" id="costTotal">0.00</span> 元</span></div>
-      <div class="cost-list" id="costList"></div>
-      <button class="cost-add-row" id="addCostBtn">➕ 添加一项</button>
-    </div>
+  </div>
+  <button class="btn-cost-toggle" id="costToggle">💰 成本</button>
+  <div class="cost-panel" id="costPanel">
+    <div class="cost-header"><span>总成本</span><span><button class="cost-btn-clear" id="clearCostsBtn">清空</button> <span class="cost-total-amount" id="costTotal">0.00</span> 元</span></div>
+    <div class="cost-list" id="costList"></div>
+    <button class="cost-add-row" id="addCostBtn">➕ 添加一项</button>
   </div>
   <div class="sync-bar" id="syncBar">☁️ 数据已同步到云端</div>
   <div class="stats-bar">
