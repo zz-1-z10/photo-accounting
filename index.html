@@ -247,13 +247,48 @@ async function api(method, url, body) {
   }
   var res = await fetch(url, opt);
   if (res.status === 204) return null;
+
+  // Token 过期，自动刷新
+  if (res.status === 401 && token) {
+    var refreshed = await refreshToken();
+    if (refreshed) {
+      // 重试原请求
+      opt.headers['Authorization'] = 'Bearer ' + token;
+      res = await fetch(url, opt);
+      if (res.status === 204) return null;
+    } else {
+      // 刷新失败，退出登录
+      doLogout();
+      throw new Error('登录已过期，请重新登录');
+    }
+  }
+
   try {
     var data = await res.json();
     if (!res.ok) throw new Error(data.message || data.error_description || data.msg || '请求失败');
     return data;
   } catch (e) {
-    if (res.ok) return null; // 空响应也算成功
+    if (res.ok) return null;
     throw e;
+  }
+}
+
+// 刷新 token
+async function refreshToken() {
+  var rt = localStorage.getItem('r');
+  if (!rt) return false;
+  try {
+    var opt = { method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' } };
+    opt.body = JSON.stringify({ refresh_token: rt });
+    var res = await fetch(AUTH + '/token?grant_type=refresh_token', opt);
+    var data = await res.json();
+    if (!res.ok || !data.access_token) return false;
+    token = data.access_token;
+    localStorage.setItem('t', data.access_token);
+    if (data.refresh_token) localStorage.setItem('r', data.refresh_token);
+    return true;
+  } catch (e) {
+    return false;
   }
 }
 
@@ -309,6 +344,7 @@ $('loginBtn').onclick = async function() {
     user = data.user;
     token = data.access_token;
     localStorage.setItem('t', data.access_token);
+    localStorage.setItem('r', data.refresh_token);
     localStorage.setItem('u', JSON.stringify(data.user));
     enterApp();
   } catch (e) {
@@ -344,6 +380,7 @@ $('logoutBtn').onclick = async function() {
   user = null;
   token = null;
   localStorage.removeItem('t');
+  localStorage.removeItem('r');
   localStorage.removeItem('u');
   showPage('authPage');
 };
