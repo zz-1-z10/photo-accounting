@@ -567,6 +567,8 @@ $('addCostBtn').onclick = async function() {
           break;
         }
       }
+      // 重渲染让 input 元素拿到真实 ID
+      renderCosts();
     }
   } catch (e) {}
 };
