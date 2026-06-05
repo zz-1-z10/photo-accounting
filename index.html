@@ -419,7 +419,7 @@ async function loadData() {
       var merged = [];
       for (var ci = 0; ci < costData.length; ci++) {
         var cloud = costData[ci];
-        var local = localMap[cloud.id] || localMap['temp_' + ci];
+        var local = localMap[cloud.id] || (ci < costs.length && costs[ci].id.indexOf('temp_') === 0 ? costs[ci] : null);
         if (local) {
           // 保留本地填的内容，更新云端 ID
           local.id = cloud.id;
