@@ -230,6 +230,12 @@ let costs = [];
 let costOpen = false;
 let costExpand = false;
 
+// 成本存本地防丢失
+function saveCostsLocal() { localStorage.setItem('costs', JSON.stringify(costs)); }
+function loadCostsLocal() {
+  try { var d = JSON.parse(localStorage.getItem('costs')); if (d) costs = d; } catch(e) {}
+}
+
 
 function $(id) { return document.getElementById(id); }
 
@@ -395,13 +401,20 @@ async function enterApp() {
 // ====== 数据加载 ======
 async function loadData() {
   setSync('⏳ 同步中...');
+  // 先从本地加载成本（立即显示）
+  loadCostsLocal();
+  renderCosts();
   try {
     const [recData, costData] = await Promise.all([
       api('GET', REST + '/records?user_id=eq.' + user.id + '&order=created_at.asc'),
       api('GET', REST + '/costs?user_id=eq.' + user.id + '&order=created_at.asc')
     ]);
     records = recData || [];
-    costs = costData || [];
+    // 用云端成本替换本地（云端有完整 ID）
+    if (costData && costData.length > 0) {
+      costs = costData;
+      saveCostsLocal();
+    }
     renderRecords();
     renderCosts();
     setSync('☁️ 数据已同步到云端');
@@ -564,19 +577,11 @@ $('addCostBtn').onclick = async function() {
       for (var i = 0; i < costs.length; i++) {
         if (costs[i].id === tempId) {
           costs[i].id = realId;
-          // 用户可能在 POST 完成前就填了内容，同步到真实 ID
-          var item = costs[i];
-          if (item.description) {
-            api('PATCH', REST + '/costs?id=eq.' + realId, { description: item.description }).catch(function(){});
-          }
-          if (item.amount) {
-            api('PATCH', REST + '/costs?id=eq.' + realId, { amount: item.amount }).catch(function(){});
-          }
           break;
         }
       }
-      // 重渲染让 input 元素拿到真实 ID
       renderCosts();
+      saveCostsLocal();
     }
   } catch (e) {}
 };
@@ -588,6 +593,7 @@ $('clearCostsBtn').onclick = async function() {
   }
   costs = [];
   renderCosts();
+  saveCostsLocal();
 };
 
 function renderCosts() {
@@ -616,6 +622,7 @@ function renderCosts() {
       '</div>';
   }
   el.innerHTML = html;
+  saveCostsLocal();
 
   if (showToggle) {
     el.classList.add('collapsed');
@@ -647,7 +654,7 @@ function costUpdateTotal(inp) {
   $('costTotal').textContent = total.toFixed(2);
 }
 
-// 离开输入框时保存到云端
+// 离开输入框时保存到本地和云端
 function costSave(inp) {
   var id = inp.dataset.cid;
   var field = inp.dataset.field;
@@ -661,9 +668,14 @@ function costSave(inp) {
   } else {
     cost.description = inp.value;
   }
-  var updateData = {};
-  updateData[field] = cost[field];
-  api('PATCH', REST + '/costs?id=eq.' + id, updateData).catch(function() {});
+  // 先存本地（确保不丢）
+  saveCostsLocal();
+  // 再同步云端（如果 ID 以 temp_ 开头说明还没创建成功，跳过）
+  if (id && id.indexOf('temp_') !== 0) {
+    var updateData = {};
+    updateData[field] = cost[field];
+    api('PATCH', REST + '/costs?id=eq.' + id, updateData).catch(function(){});
+  }
 }
 
 async function deleteCost(id) {
@@ -671,6 +683,7 @@ async function deleteCost(id) {
   await api('DELETE', REST + '/costs?id=eq.' + id);
   costs = costs.filter(function(c) { return c.id !== id; });
   renderCosts();
+  saveCostsLocal();
 }
 
 // ====== 文本查看 ======
